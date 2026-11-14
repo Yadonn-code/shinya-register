@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>深夜三時のレジ</title>
+<meta name="description" content="深夜のコンビニで、前任者のマニュアルを頼りに、来た客が人間かどうかを見分けるルール系ホラーゲーム。">
+<meta name="theme-color" content="#090b0a">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Zen+Kaku+Gothic+New:wght@400;700&display=swap">
+<style>
+/* 入口：タイトルと、PC版／スマホ版の選択だけ */
+:root{
+  --bg:#090b0a; --panel:#111513; --line:#253029; --ink:#d4ddd7; --muted:#7f8d85; --fluoro:#ecf7f0; --store:#3fae8c;
+  --f-display:"DotGothic16", ui-monospace, "MS Gothic", monospace;
+  --f-body:"Zen Kaku Gothic New", "Hiragino Sans", "Yu Gothic", "Meiryo", sans-serif;
+  color-scheme: dark;
+}
+*,*::before,*::after{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.8;display:flex}
+main{margin:auto;max-width:560px;width:100%;display:flex;flex-direction:column;gap:20px;
+  padding-block:max(32px,env(safe-area-inset-top,0px)) max(32px,env(safe-area-inset-bottom,0px));
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.kicker{font-family:var(--f-display);color:var(--store);letter-spacing:.2em;font-size:13px}
+h1{font-family:var(--f-display);font-weight:400;color:var(--fluoro);font-size:clamp(40px,10vw,68px);letter-spacing:.06em;line-height:1.15;margin:0;text-shadow:0 0 18px rgba(63,174,140,.35);text-wrap:balance}
+p{margin:0}
+.muted{color:var(--muted);font-size:13px}
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media (max-width:420px){.choices{grid-template-columns:1fr}}
+.choice{display:flex;flex-direction:column;gap:2px;padding:16px;border:1px solid var(--muted);border-radius:2px;color:var(--ink);text-decoration:none;position:relative}
+.choice b{font-size:18px;color:var(--fluoro)}
+.choice span{font-size:13px;color:var(--muted)}
+.choice:hover,.choice:focus-visible{border-color:var(--fluoro);outline:none}
+.choice.rec{border-color:var(--store);background:rgba(63,174,140,.08)}
+.choice.rec::after{content:"おすすめ";position:absolute;top:-10px;right:10px;background:var(--store);color:var(--bg);font-size:11px;padding:0 8px;font-family:var(--f-display)}
+</style>
+</head>
+<body>
+<main>
+  <div class="kicker">コンビニ夜勤ホラー　AM 0:00 — 6:00</div>
+  <h1>深夜三時のレジ</h1>
+  <p>前任者が残した手書きのマニュアルだけを頼りに、深夜のコンビニに来る客を見極める。人間か、それとも人ではない何かか。来る客は、毎晩ちがう。</p>
+  <div class="choices">
+    <a class="choice" id="pc" href="pc/"><b>PC版</b><span>キーボード操作・全画面</span></a>
+    <a class="choice" id="sp" href="sp/"><b>スマホ版</b><span>タップ操作・振動・ホーム画面に追加</span></a>
+  </div>
+  <p class="muted">音が出ます。ヘッドホン推奨。</p>
+</main>
+<script>
+// 指で操作する小さな画面ならスマホ版を、それ以外はPC版をおすすめする
+const touch = matchMedia('(pointer: coarse)').matches && Math.min(screen.width, screen.height) < 820;
+document.getElementById(touch ? 'sp' : 'pc').classList.add('rec');
+</script>
+</body>
+</html>

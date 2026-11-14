@@ -1,0 +1,3 @@
+/* PC版：大きな画面では店内を広く見せる */
+body.pc .app{max-width:1180px}
+body.pc .stage{cursor:crosshair}

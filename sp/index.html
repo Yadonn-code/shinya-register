@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="深夜三時のレジ">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="../icon-180.png">
+<title>深夜三時のレジ（スマホ版）</title>
+<meta name="description" content="深夜のコンビニで、前任者のマニュアルを頼りに、来た客が人間かどうかを見分けるルール系ホラーゲーム。">
+<meta name="theme-color" content="#090b0a">
+<link rel="icon" href="../icon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Zen+Kaku+Gothic+New:wght@400;700&family=Zen+Kurenaido&display=swap">
+<link rel="stylesheet" href="../game.css">
+<link rel="stylesheet" href="../sp.css">
+</head>
+<body class="sp">
+<div class="app">
+  <header class="hud">
+    <div class="clock"><small>AM</small><span id="clock">00:00</span></div>
+    <div class="meters">
+      <div>あなたの影<span class="pips" id="shadowPips"></span></div>
+      <div>苦情<span class="pips comp" id="compPips"></span></div>
+      <button id="mute" class="small" type="button">音 ON</button>
+    </div>
+  </header>
+  <div class="stage"><canvas id="cv" aria-label="深夜のコンビニのレジ前"></canvas></div>
+  <section class="box" id="box" aria-live="polite">
+    <div class="who" id="who"></div>
+    <div class="desc" id="desc"></div>
+    <div class="line" id="line"></div>
+    <div class="items" id="items"></div>
+    <div class="timer" id="timerWrap"><i id="timer"></i></div>
+  </section>
+  <div class="actions">
+    <div class="grp">
+      <button id="bFace" type="button">顔を見る<kbd>V</kbd></button>
+      <button id="bFeet" type="button">身を乗り出す<kbd>F</kbd></button>
+      <button id="bCam" type="button">防犯カメラ<kbd>C</kbd></button>
+      <button id="bManual" type="button">マニュアル<kbd>M</kbd></button>
+    </div>
+    <div class="grp">
+      <button id="bAccept" type="button" hidden>接客する</button>
+      <button id="bReject" type="button" hidden>目を伏せる</button>
+      <button id="bNext" class="primary" type="button" hidden>次へ<kbd>Enter</kbd></button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="titleOv">
+  <div class="card">
+    <div class="kicker">コンビニ夜勤ホラー　AM 0:00 — 6:00</div>
+    <h1>深夜三時のレジ</h1>
+    <p>今夜からひとりで夜勤に入る。前の担当者から引き継いだのは、店の鍵と手書きのマニュアル一冊だけ。</p>
+    <p>来る客を見て、接客するか、目を伏せてやり過ごすかを決める。人間を無視すれば苦情が入る。人間ではないものに接客すれば、あなたの影が薄くなる。</p>
+    <div class="field">
+      <label for="nameIn">あなたの名前（名札には書かれません）</label>
+      <input id="nameIn" maxlength="8" placeholder="例：ミナミ" autocomplete="off">
+    </div>
+    <div class="row"><button id="bStart" class="primary" type="button">マニュアルを読む</button></div>
+    <p class="muted">音が出ます。ヘッドホン推奨。マニュアルを開いている間も、客は待ってくれません。来る客は、毎晩ちがいます。<br>画面下のボタンで操作します。エンディングの映像は、画面をタップするとスキップできます。</p>
+  </div>
+</div>
+
+<div class="overlay" id="manualOv" hidden>
+  <div class="note" role="dialog" aria-label="夜勤マニュアル">
+    <h3>夜勤のひとへ</h3>
+    <p>このノートは全部、黒のボールペンで書いた。</p>
+    <ol>
+      <li><b>1.</b><span>入店チャイムが鳴らなかった客には、接客しないこと。目を伏せて、いなくなるのを待つ。</span></li>
+      <li><b>2.</b><span>足元に影がない客には、接客しないこと。レジからは見えないので、身を乗り出して確かめる。</span></li>
+      <li><b>3.</b><span>防犯カメラのモニターに映らない客には、接客しないこと。映像が乱れて姿がわからない客も同じ。</span></li>
+      <li><b>4.</b><span>名札には「研修中」としか書いていない。客があなたの名前を呼んだら、接客しないこと。</span></li>
+      <li><b>5.</b><span>店の電話が鳴ったら表示を見る。本部からなら出る。非通知なら絶対に出ない。</span></li>
+      <li><b>6.</b><span>店長は今夜来ない。</span></li>
+      <li><b>7.</b><span>朝6時の交代は佐藤さん。佐藤さんは左手に包帯を巻いている。</span></li>
+      <li class="red" id="redRule" hidden><b>8.</b><span>午前3時を過ぎたら、影のない客にも接客してよい。</span></li>
+    </ol>
+    <p>変わった人と、人じゃないものは、違う。見た目で決めないこと。</p>
+    <p>動物にも、影はある。</p>
+    <p class="sign">— 前任より</p>
+    <div class="close"><button id="bManClose" type="button">閉じる</button></div>
+  </div>
+</div>
+
+<div class="overlay" id="endOv" hidden>
+  <div class="card">
+    <div class="kicker" id="endKind"></div>
+    <h2 id="endTitle"></h2>
+    <p class="end-text" id="endText"></p>
+    <div class="stats" id="endStats"></div>
+    <div class="row"><button id="bRetry" class="primary" type="button">もう一度、夜勤に入る</button></div>
+  </div>
+</div>
+<script src="../game.js"></script>
+</body>
+</html>
