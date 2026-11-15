@@ -443,6 +443,27 @@ POOL.cellist = [ // 人間。バッハを口ずさんでいるだけ
     react:{ face:'（目が合うと、彼女は照れくさそうに鼻歌をやめた）' },
     aText:'「ありがとうございます」彼女はケースを背負い直し、鼻歌の続きを歌いながら出ていった。', rText:'彼女は少し困った顔をして、鼻歌をやめて出ていった。\nあれは、人間だった。' },
 ];
+// ハード限定の客。ルールでは見抜けるが、手がかりがとても小さい
+POOL.hard = [
+  { who:'几帳面そうな女', idFlaw:'date',
+    look:{ h:.94, coat:'#3a4a44', pants:'#2a2e2c', shirt:'#ecebe6', lapel:true, skin:'#e2c8b4', hair:'bob', hairC:'#1a1412', glasses:true, feet:'leather', shoes:'#141414', seed:12900 },
+    desc:'きちんとした身なりの女性。財布の中のカードが、きれいに並んでいる。', line:'梅酒を一本。\n……身分証ですね。どうぞ、よく確認してください。', items:['梅酒'],
+    talk:['会社の寮からです。', '寮ですよ。……ふふ、きちんと確認する人は、好きです。'],
+    aText:'「ありがとうございます」……あとで思い返すと、身分証の生年月日は「2月30日」だった。そんな日は、ない。',
+    rText:'「……よく、気づきましたね」女は身分証をしまうと、表情のないまま出ていった。' },
+  { who:'感じのいい青年',
+    look:{ h:1.0, coat:'#3a4c66', pants:'#2a2e36', shirt:'#e8eaec', skin:'#dcbea6', hair:'short', hairC:'#201c1a', feet:'sneaker', shoes:'#e8e8e4', seed:13200 },
+    desc:'さわやかな青年。笑顔が、少しも崩れない。', lines:['温かいお茶をひとつ。\n夜勤、大変ですね。いつも、ありがとうございます。', 'おにぎりと、お茶を。\n……この時間、いつも、あなたですよね。'], items:['お茶（ホット）','おにぎり'],
+    talk:['駅の向こうのアパートからです。', '……アパート？　ああ、そうでした。\nいえ、ここの裏の、空き地からです。ずっと。'],
+    aText:'お茶を受け取ると、青年は笑顔のまま首をかしげた。首はそのまま止まらずに、真横まで曲がった。「また、来ますね」',
+    rText:'目を伏せていると、青年の笑い声だけが、少しも途切れずに遠ざかっていった。' },
+  { who:'白無垢の花嫁', shadow:false, fatal:'erosion',
+    look:{ h:.93, coat:'#f2f0ea', pants:'#f2f0ea', legs:'#f2f0ea', skirtLen:.95, skin:'#f0e8e2', hair:'bun', hairC:'#0a0a0a', hood:true, pale:true, stare:true, smile:true, feet:'sandal', shoes:'#f2f0ea', seed:0 },
+    desc:'白無垢の花嫁。綿帽子の下で、口元だけが笑っている。', line:'……お迎えに、あがりました。\n今夜、わたしと、祝言を。', items:[],
+    talk:['……川の、むこうの、お社から。', '……お社？　いいえ。\nあなたの、となりから。ずっと、となりに。'],
+    aText:'差し出された白い手を取った。冷たい指が絡みつき、足元から影がずるずると引き抜かれていく。',
+    rText:'目を伏せていると、鈴の音が三度鳴った。「……つれないお方」顔を上げると、床に白い花びらが一枚落ちていた。' },
+];
 // 見誤ったら、その場でゲームオーバーになる客。二日目と三日目に一人ずつ来る
 const CONDUCTOR = { type:'cust', who:'白髪の指揮者', human:false, fatal:'finale', chime:false, walk:true, shadow:true, cam:true, music:'toccata',
   look:{ h:1.02, coat:'#0a0a0e', pants:'#0a0a0e', shirt:'#ecece8', bowtie:true, gloves:'#f0f0ec', lapel:true, skin:'#d4c8bc', hair:'messy', hairC:'#e8e8e4', old:true, baton:true, stare:true, feet:'leather', shoes:'#050505', seed:0 },
@@ -503,10 +524,10 @@ function makeId(c, r){
   const age = c.minor ? 17 : c.look.old ? 68 + Math.floor(r() * 14) : 21 + Math.floor(r() * 30);
   const flaw = c.idFlaw || (!c.human ? 'exp' : null);
   const m = 1 + Math.floor(r() * 12), d = 1 + Math.floor(r() * 28);
-  const born = flaw === 'born' ? YEAR - 141 : YEAR - age, exp = flaw === 'exp' ? YEAR - 27 : YEAR + 1 + Math.floor(r() * 4);
+  const born = flaw === 'born' ? YEAR - 141 : YEAR - age, md = flaw === 'date' ? '2月 30日' : `${m}月 ${d}日`, exp = flaw === 'exp' ? YEAR - 27 : YEAR + 1 + Math.floor(r() * 4);
   const alt = c.photo || { hair: c.look.hair === 'long' ? 'short' : 'long', hairC: '#c8c8c4', glasses: !c.look.glasses };
   return { flaw, name: flaw === 'name' ? '{name}' : pick(SEI) + '　' + pick(MEI),
-    born: `${born}年 ${m}月 ${d}日生`, addr: `${pick(TOWN)} ${1 + Math.floor(r() * 5)}-${1 + Math.floor(r() * 20)}-${1 + Math.floor(r() * 12)}`,
+    born: `${born}年 ${md}生`, addr: `${pick(TOWN)} ${1 + Math.floor(r() * 5)}-${1 + Math.floor(r() * 20)}-${1 + Math.floor(r() * 12)}`,
     exp: `${exp}年 ${1 + Math.floor(r() * 12)}月 ${1 + Math.floor(r() * 28)}日まで有効`, look: flaw === 'photo' ? { ...c.look, ...alt, stare: false } : { ...c.look, stare: false } };
 }
 const ANOM_NAME = { sign:'看板の文字', fridge:'冷蔵ケースの顔', hand:'棚から出た手', eyes:'棚の奥の目', steps:'濡れた足跡', redlight:'赤い蛍光灯' };
@@ -598,6 +619,12 @@ function buildNight(n, carry){
     after = shuffle([...late, idCase(), ghostOf(r() < .5 ? POOL.noCam : POOL.nameCall), phone(pick(POOL.unknown), 'unknown'), ghostOf(POOL.fake),
       { ...fatal }, musician(), ...p(.4, [ghostOf(POOL.alien)]), ...p(.4, [MANAGER]), ...p(.3, [twin(pick(early))])]);
   }
+  if (S.diff === 'hard'){ // ハード限定の客。ふつうの顔ぶれと順番はそのままに、あいだへ差しこむ
+    const hr = rng(S.seed * 13 + n), first = rng(S.seed * 13)() < .5 ? 0 : 1, h = POOL.hard[n === 3 ? 2 : n === 1 ? first : 1 - first];
+    const c = { type:'cust', human:false, chime:true, shadow:true, cam:true, ...h, line: h.line || h.lines[Math.floor(hr() * h.lines.length)] };
+    if (AGE.test(c.items.join())){ c.age = true; c.accept = '販売する'; c.reject = '断る'; c.id = makeId(c, hr); }
+    const list = n === 2 ? before : after; list.splice(2 + Math.floor(hr() * (list.length - 2)), 0, c);
+  }
   const hm = m => `${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`;
   const at = (list, from, to) => { // 2人連れの2人目は、1人目の2分後
     list = list.flat(); let last = 0;
@@ -652,7 +679,7 @@ const S = {
   name:'ミナミ', idx:-1, shadow:3, comp:0, right:0, total:0, phase:'title', ev:null, cur:null,
   pose:{ p:0, a:0 }, anim:null, door:0, doorT:0, peek:null, cut:null, view:null, lastView:'feet', closeK:0, dark:null, aisle:null, flash:null, camGhost:0, omenNext:0, omenArmed:false, flashes:0, counterT0:0, pet:null, petHiss:0, animalAt:false, ufo:null, crow:null, moths:null, rat:null, timer:null, talkN:0, reacted:{}, lineSeq:0, log:[],
   ringing:false, nextRing:0, phoneDisplay:'', red:false, light:1, toast:null, scare:null, pendingEnd:null, lastThump:0,
-  night:1, diff:'normal', seed:1, used:new Set(), frags:new Set(), forged:false, hidden:false, anom:null, lastAnom:null, falseRep:0, partner:null, endKind:null,
+  night:1, diff:'normal', fateNext:0, fateToast:false, seed:1, used:new Set(), frags:new Set(), forged:false, hidden:false, anom:null, lastAnom:null, falseRep:0, partner:null, endKind:null,
 };
 const fmt = s => (s || '').split('{name}').join(S.name);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[c]));
@@ -1706,7 +1733,7 @@ function musicStop(){
   b.gain.setTargetAtTime(0, at(), .25); setTimeout(() => b.disconnect(), 1500);
 }
 function playMusic(kind){
-  if (!A.c || !SONGS[kind]) return; musicStop();
+  if (!A.c || !SONGS[kind]) return; musicStop(); fateStop(); S.fateNext = 0;
   const bus = A.bus = A.c.createGain(); bus.gain.value = 1; bus.connect(A.m);
   SONGS[kind](at() + .15, bus);
 }
@@ -1719,6 +1746,14 @@ function violinNote(f, t, dur, d, vol){ // ビブラートのかかった弦の�
   o.connect(bp); bp.connect(g); g.connect(d); o.start(t); lfo.start(t); o.stop(t + dur + .4); lfo.stop(t + dur + .4);
 }
 const NOTE_HZ = n => 440 * Math.pow(2, (n - 69) / 12); // MIDIの音番号 → 周波数
+// ベートーヴェン「運命」の冒頭（パブリックドメイン）。ピアノで一回弾いて、長さ（秒）を返す
+function fatePhrase(t, d){
+  const b = .3, seq = [[0,1],[67,1],[67,1],[67,1],[63,8],[0,1],[65,1],[65,1],[65,1],[62,10],[0,1],[67,1],[67,1],[67,1],[63,1],[68,1],[68,1],[68,1],[67,1],[75,1],[75,1],[75,1],[72,8]];
+  const piano = (n, s, l, v) => { const f = NOTE_HZ(n); tone(f, s, l * 1.4, 'triangle', .1 * v, null, d); tone(f / 2, s, l * 1.4, 'sine', .07 * v, null, d); tone(f * 2.005, s, l * .5, 'sine', .02 * v, null, d); };
+  let s = t; seq.forEach(([n, l]) => { if (n){ piano(n, s, l * b, 1); piano(n - 12, s, l * b, .55); } s += l * b; });
+  return s - t;
+}
+function fateStop(){ const f = A.fate; if (!f) return; A.fate = null; f.gain.setTargetAtTime(0, at(), .3); setTimeout(() => f.disconnect(), 1500); }
 const SONGS = {
   funeral(t, d){ // ショパン「葬送行進曲」の冒頭（パブリックドメイン）。低いピアノで二回
     const b = .95, mel = [[58,1],[58,.75],[58,.25],[58,1],[61,.75],[60,.25],[60,.75],[58,.25],[58,.75],[57,.25],[58,2]];
@@ -2108,7 +2143,7 @@ function startNight(n){
   }
   const carry = n > 1 ? { ...carryFrom(n - 1), restored } : null;
   S.night = n; NIGHT = buildNight(n, carry);
-  Object.assign(S, { idx:-1, red:false, forged:false, pendingEnd:null, cur:null, ev:null, partner:null, scare:null, door:0, doorT:0, peek:null, cut:null, view:null, dark:null, aisle:null, flash:null, camGhost:0, omenNext:0, omenArmed:false, flashes:0, petHiss:0, animalAt:false, ufo:null, crow:null, moths:null, rat:null, anom:null });
+  Object.assign(S, { fateNext:0, fateToast:false, idx:-1, red:false, forged:false, pendingEnd:null, cur:null, ev:null, partner:null, scare:null, door:0, doorT:0, peek:null, cut:null, view:null, dark:null, aisle:null, flash:null, camGhost:0, omenNext:0, omenArmed:false, flashes:0, petHiss:0, animalAt:false, ufo:null, crow:null, moths:null, rat:null, anom:null });
   bReport.hidden = n < 2; renderRules(); hud(); audioInit(); next();
 }
 function next(){
@@ -2251,6 +2286,13 @@ function update(now){
   if (S.dark && now < S.dark.t0 + S.dark.dur) S.light = 0;
   if (A.hum) A.hum.gain.value = .05 * (.5 + .5 * S.light);
   if (S.ringing && now > S.nextRing){ sRing(); S.nextRing = now + 2600; }
+  // 午前4時台は、有線から「運命」がピアノで流れる。客の音楽が鳴っているあいだは止める
+  const fate = A.c && parseInt($('clock').textContent, 10) === 4 && !['title', 'end', 'cut'].includes(S.phase) && !A.bus;
+  if (fate && now > S.fateNext){
+    if (!A.fate){ A.fate = A.c.createGain(); A.fate.gain.value = .6; A.fate.connect(A.m); }
+    if (!S.fateToast){ S.fateToast = true; toast('（有線から、ピアノの音が流れはじめた）', 480, 420, true); }
+    S.fateNext = now + fatePhrase(at() + .1, A.fate) * 1000 + 4500;
+  } else if (!fate && A.fate && !A.bus){ fateStop(); S.fateNext = 0; }
   if (S.cut){
     const C = CUTS[S.cut.kind], t = now - S.cut.t0;
     (C.cues || []).forEach(([ms, fn], i) => { if (t >= ms && !S.cut.cues.has(i)){ S.cut.cues.add(i); fn(); } });
@@ -2322,6 +2364,7 @@ function dexCatalog(){
     ['偽物', [...POOL.fake, MANAGER, FAKE_SATO], G], ['動物', POOL.animal, e => e.fake ? '偽物' : '本物'],
     ['音楽家', [...POOL.musician, ...POOL.cellist], e => POOL.cellist.includes(e) ? H : G],
     ['見誤ったら終わり', [CONDUCTOR, AUDITOR], e => e.human ? H : G],
+    ['ハード限定', POOL.hard, G],
     ['朝の人', [REAL_SATO, PREDECESSOR], e => e.human ? H : '前の担当'],
   ];
 }
