@@ -14,9 +14,9 @@ body.sp kbd{display:none}
 body.sp .actions{position:fixed;left:0;right:0;bottom:0;z-index:10;display:grid;grid-template-columns:1fr;gap:8px;background:var(--bg);border-top:1px solid var(--line);
   padding:10px max(12px,env(safe-area-inset-right,0px)) calc(10px + env(safe-area-inset-bottom,0px)) max(12px,env(safe-area-inset-left,0px))}
 body.sp .actions .grp{display:grid;gap:6px}
-body.sp .actions .grp:first-child{grid-template-columns:repeat(4,1fr)}
+body.sp .actions .grp:first-child{grid-template-columns:repeat(5,1fr)}
 body.sp .actions .grp:last-child{grid-template-columns:1fr 1fr;min-height:52px}
-body.sp .actions .grp:first-child button{font-size:12px;padding:10px 2px;white-space:nowrap}
+body.sp .actions .grp:first-child button{font-size:11px;letter-spacing:-.04em;padding:10px 0;white-space:nowrap;min-width:0}
 body.sp .actions .grp:last-child button{font-size:16px;padding:14px 8px}
 body.sp #bNext{grid-column:1 / -1}
 body.sp button:active:not(:disabled){background:var(--line)}

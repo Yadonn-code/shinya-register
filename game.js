@@ -152,6 +152,7 @@ const POOL = {
 const MANAGER = { type:'cust', who:'店の制服を着た男', human:false, chime:true, shadow:true, cam:true, accept:'ついていく', reject:'レジを離れない', scare:'blackout',
   look:{ h:1.0, coat:STORE, pants:'#24282a', skin:'#cdb39c', hair:'short', hairC:'#8d8d88', uniform:true, tag:'店長', stubble:true, feet:'leather', shoes:'#141414', seed:0 },
   desc:'あなたと同じ制服。胸の名札に「店長 田村」。', line:'おつかれ。店長の田村だ。\n……ちょっと倉庫の在庫、一緒に見てくれる？', items:[],
+  talk:['本部の帰りだよ。様子を見にね。', '……本部？　ああ、いや、奥からだよ。\nずっと倉庫にいたんだ。'],
   aText:'倉庫の扉をくぐった瞬間、明かりが消えた。背後で、外から鍵がかかる音がした。',
   rText:'「すみません、レジを離れられないので」男は笑顔のまま、しばらく動かなかった。それからバックヤードの扉の奥へ消えた。あの奥に、出口はない。' };
 const INTRO = { type:'narr', t:'00:00', who:'午前0時', text:'前の担当から引き継いだのは、店の鍵と、手書きのマニュアル一冊だけ。\n「研修中」の名札を付けて、レジに立つ。' };
@@ -159,11 +160,13 @@ const NOTE = { type:'narr', t:'02:59', who:'午前2時59分', red:true, text:'�
 const FAKE_SATO = { type:'cust', t:'06:00', who:'交代の女性', human:false, final:'fake', chime:true, shadow:true, cam:true, accept:'交代する', reject:'まだ交代しない',
   look:{ h:.92, coat:STORE, pants:'#24282a', skin:'#e0c3ad', hair:'pony', hairC:'#2b1f18', uniform:true, bandage:'R', tag:'佐藤', feet:'sneaker', shoes:'#e9e7e0', seed:0 },
   desc:'眠そうな顔の女性。右手に、白い包帯を巻いている。', line:'交代です。……{name}さん、お疲れ様でした。\nもう帰っていいですよ。', items:[],
+  talk:['家からです。{name}さんの、おうちの近くから。', '……家？　いいえ、ずっと奥にいましたよ。\nバックヤードに。'],
   aText:'「お疲れ様でした」笑顔に見送られて、店を出た。',
   rText:'「……まだ、いいです」女性はにこにこしたまま後ずさり、自動ドアの向こうの暗がりに溶けた。チャイムは鳴らなかった。' };
 const REAL_SATO = { type:'cust', who:'息を切らした女性', human:true, final:'real', chime:true, shadow:true, cam:true, accept:'交代する', reject:'まだ交代しない',
   look:{ h:.92, coat:STORE, pants:'#24282a', skin:'#e3c7b0', hair:'pony', hairC:'#2b1f18', uniform:true, bandage:'L', tag:'佐藤', feet:'sneaker', shoes:'#e9e7e0', seed:2100 },
   desc:'走ってきたらしい。左手に、白い包帯を巻いている。', line:'ごめん、遅れた！　佐藤です、交代するね。\n……昨夜、何もなかった？', items:[],
+  talk:['家から！　チャリで飛ばしてきた。', 'え、家からだってば。……大丈夫？　顔色わるいよ。'],
   aText:'「何もなかったです」と答えた。佐藤さんは、少しだけほっとした顔をした。', rText:'「え、なんで？」佐藤さんは困った顔をした。結局、十分後に交代した。' };
 
 // 奇妙だが、中身は人間の客
@@ -221,9 +224,113 @@ POOL.fake = [
   { who:'警察官', shadow:false, accept:'奥へ通す',
     look:{ h:1.02, coat:'#1d2a44', pants:'#1d2a44', shirt:'#dfe4ea', skin:'#d2b296', hair:'short', hairC:'#1a1a1a', cap:'police', tie:'#14182a', stare:true, feet:'leather', shoes:'#0a0a0a', seed:0 },
     desc:'制服の警察官。無線は、まったく鳴っていない。', line:'巡回中です。この店で、何か変わったことは？\n……念のため、奥を確認させてもらえますか。', items:[],
+    talk:['駅前の交番からです。', '……交番？　いえ、本署から。\n……どちらでも、同じでしょう。'],
     aText:'バックヤードの扉を開けた警官は、振り返って笑った。「いい店ですね。住みやすそうだ」',
     rText:'目を伏せていると、無線のノイズのような声で「……また来ます」と聞こえた。足音は、しなかった。' },
 ];
+// 見た目はいかにも幽霊だが、ルールはすべて満たしている人間。追い返すと苦情になる
+POOL.seemGhost = [
+  { who:'白い着物の女',
+    look:{ h:.94, coat:'#e9e6e0', pants:'#e9e6e0', legs:'#e4d6cc', skirtLen:.85, skin:'#e8dcd4', hair:'long', hairC:'#0b0b0c', faceHidden:true, pale:true, feet:'sandal', shoes:'#d8cfc4', seed:6300 },
+    desc:'白い着物。長い髪で、顔がほとんど隠れている。', lines:['……ろうそく……ください……', '……おそなえ……の……おはぎ……を……'], items:['ろうそく','おはぎ'],
+    talk:['……あっ、すみません！　肝試しのお化け役で、裏の墓地から……\nつい、役のまま入っちゃって。', 'だから、裏の墓地ですって。サークルの合宿で。\n……メイク、そんなに怖いですか？'],
+    react:{ feet:'……あの、裾、踏んでます？\nこれ、レンタルなんで……', face:'（髪の隙間から、泣きぼくろのある目がぱちぱちと瞬いた）' },
+    aText:'「よかったあ、ろうそく切れてて」女は髪をかき上げた。下から出てきたのは、汗だくの大学生の顔だった。',
+    rText:'女は長い髪をかき上げた。下から出てきたのは、泣きそうな大学生の顔だった。「……お化け役、やりすぎたかな」\nあれは、人間だった。' },
+  { who:'ずぶ濡れの男',
+    look:{ h:1.0, coat:'#3a4248', pants:'#2a3036', shirt:'#c8ccc8', skin:'#bfc6c4', hair:'messy', hairC:'#141414', wet:true, pale:true, stubble:true, feet:'leather', shoes:'#1a1a1a', seed:6600 },
+    desc:'全身ずぶ濡れ。唇が紫色だ。外は、雨なんて降っていない。', lines:['……タオル……ありますか……', '……さむい……あったかい、ものを……'], items:['フェイスタオル','缶コーヒー（ホット）'],
+    talk:['……川です。酔って、橋から落ちて……\n自分で、泳いで上がってきました……', 'だから、川ですって……　へっくし！\n……財布だけは、無事でした。'],
+    react:{ feet:'（男の足元には水たまりができていて、その上で、震える影が揺れていた）', face:'……そんなに見ないでください。\n顔、真っ青でしょう……' },
+    aText:'男はタオルを頭からかぶって、何度も礼を言った。床の水たまりには、ちゃんと男の影が映っていた。',
+    rText:'男は震えながら出ていった。翌朝のニュースで「橋から転落の男性、自力で岸へ」と流れていた。\nあれは、人間だった。' },
+  { who:'血まみれのエプロンの男',
+    look:{ h:1.04, coat:'#3a3a3a', pants:'#26262a', apron:'#e6e3dc', blood:true, skin:'#c9a184', hair:'short', hairC:'#1a1a1a', stubble:true, feet:'boots', shoes:'#1a1a1a', seed:6900 },
+    desc:'白いエプロンに、赤黒い染みがべったり付いている。', lines:['……一番大きいゴミ袋と、漂白剤。\n……急いでるんだ。', '……ゴミ袋を、ありったけ。\n……あと、ゴム手袋も。'], items:['ゴミ袋（45L）','漂白剤','ゴム手袋'],
+    talk:['そこの焼肉屋だよ。仕込みがやっと終わってな。', '焼肉屋だって。……ああ、このエプロンか。\nハツとレバーだよ。食うかい？'],
+    react:{ feet:'……長靴、汚れてるだろ。床、汚してたら悪いな。' },
+    aText:'「明日の夜、店に来なよ。タン一皿サービスする」男はゴミ袋を担いで出ていった。',
+    rText:'「……なんだよ、感じ悪いな」男は舌打ちして出ていった。翌日、通りの焼肉屋の看板で、同じ顔の店主が笑っていた。\nあれは、人間だった。' },
+  { who:'瞬きをしない女',
+    look:{ h:.93, coat:'#2a2a30', pants:'#1e1e24', inner:'#d8d4cc', cardigan:true, skin:'#e4cfc2', hair:'long', hairC:'#141012', stare:true, iris:'#6a7a8a', feet:'leather', shoes:'#141414', seed:7200 },
+    desc:'じっとこちらを見ている。瞬きを、ほとんどしない。瞳の色が、少し薄い。', lines:['……目薬。一番、強いやつ。', '……目薬、ありますか。\n……ずっと、目が、閉じられなくて。'], items:['目薬（クール）'],
+    talk:['……家から。カラコン入れたまま寝ちゃって、\n目がカピカピで。', 'だから家からですってば。……あ、いま瞬きしたの、見ました？\n痛いんですよ、これ。'],
+    react:{ face:'（よく見ると、彼女はときどき、痛そうに瞬きをしている）' },
+    aText:'女はその場で目薬をさして、「生き返ったあ」と笑った。目が真っ赤だった。',
+    rText:'女は涙目のまま、目をこすりながら出ていった。\nあれは、人間だった。' },
+];
+// 見た目も話し方も普通の人。ルールのどれか一つだけを、何も言わずに破っている
+POOL.stealth = [
+  { who:'塾帰りの高校生', shadow:false,
+    look:{ h:.97, coat:'#2a3550', pants:'#22283a', shirt:'#e4e6e8', skin:'#e2c6b0', hair:'short', hairC:'#141414', glasses:true, feet:'sneaker', shoes:'#e0e0dc', seed:7500 },
+    desc:'リュックを背負った高校生。単語帳を片手に持っている。', lines:['肉まんと、エナジードリンクください。\n……あ、温めなくていいです。', 'これ、お願いします。\n……明日、模試なんです。'], items:['肉まん','エナジードリンク'],
+    talk:['駅前の塾からです。自習室が閉まるまでいて。', '……塾？\nああ、そうでした。塾の帰りでした。……ずっと、帰る途中なんです。'],
+    react:{ feet:'……下、見ないでもらえます？' },
+    aText:'レシートを受け取ると、少年はほっとしたように笑った。「これで、やっと帰れる」\n——床には、少年の分の影がなかった。',
+    rText:'目を伏せていると、単語帳をめくる音だけが残った。顔を上げると、カウンターに十年前の日付の模試の答案が一枚、置かれていた。' },
+  { who:'常連のおじいさん', cam:false, scare:'cam',
+    look:{ h:.88, coat:'#6a6458', pants:'#3a3832', inner:'#d0cabc', cardigan:true, buttons:true, skin:'#d4b8a2', hair:'short', hairC:'#c4c4c0', old:true, stoop:true, feet:'sandal', shoes:'#3a3a3a', seed:7800 },
+    desc:'人のよさそうなおじいさん。慣れた様子で、たばこの棚を指さす。', lines:['いつものね。三十二番のやつ。', 'やあ、新しい子かい。\nいつもの、三十二番ちょうだい。'], items:['たばこ（32番）'],
+    talk:['すぐそこの団地だよ。毎晩、この時間に来てるんだ。', '団地……？\nいや、病院だったかな。白い部屋でね。ずいぶん長く、寝てたんだ。'],
+    react:{ cam:'……カメラかい。\n最近は、映りが悪くてねえ。' },
+    aText:'たばこを渡すと、おじいさんは嬉しそうに目を細めた。「やっと、いつものが買えた」\nあとで引き継ぎノートを見ると「32番の常連さん、先月亡くなりました」と書いてあった。',
+    rText:'目を伏せていると「……そうか、もう売ってくれんのか」と寂しそうな声がした。顔を上げると、たばこの棚の32番だけが、ひとつ減っていた。' },
+  { who:'終電を逃した女性', chime:false, walk:true, // ドアは開くが、チャイムが鳴らない
+    look:{ h:.93, coat:'#7a6a58', pants:'#2a2a30', legs:'#d8c0ac', skirtLen:.45, inner:'#e8e4dc', lapel:true, skin:'#e2c6b2', hair:'bob', hairC:'#3a2a20', feet:'leather', shoes:'#2a1a12', seed:8100 },
+    desc:'ベージュのコート。スマホを見ながら入ってきた。', lines:['すみません、スマホの充電器ありますか？\nタイプCの。', 'モバイルバッテリーって、どこですか？\n……スマホ、電池切れちゃって。'], items:['モバイルバッテリー'],
+    talk:['会社からです。終電、逃しちゃって。', '……会社？\nいいえ、駅のホームからです。ずっと、来ない電車を待ってて。'],
+    aText:'「助かりました」女性は自動ドアへ向かった。ドアが開いても、チャイムは鳴らなかった。……入ってきたときも、鳴っていなかった。',
+    rText:'目を伏せていると「……次の電車、まだかな」とつぶやく声が、ゆっくり遠ざかっていった。' },
+  { who:'ジョギング中の女', shadow:false,
+    look:{ h:.95, coat:'#3a5a7a', pants:'#1e2228', skin:'#e0c0a8', hair:'pony', hairC:'#2a1e16', feet:'sneaker', shoes:'#f0f0ea', seed:8400 },
+    desc:'ランニングウェアの女性。息が、少しも上がっていない。', lines:['スポーツドリンク、ひとつ。\n……毎晩、このあたりを走ってるんです。', 'お水ください。冷たいの。\n……今夜も、走らなきゃ。'], items:['スポーツドリンク'],
+    talk:['川沿いを走ってきました。夜のほうが、涼しくて。', '川沿い……？\nああ、橋の上から……いえ、走ってたんです。たぶん、ずっと。'],
+    react:{ feet:'……走ってると、ときどき置いてきちゃうんです。\n影を。' },
+    aText:'ペットボトルを受け取った手が、ひどく冷たかった。「また明日も来ますね。明日も、その次も」\n床を見ると、女の足元に影はなかった。',
+    rText:'目を伏せていると、足音がしないまま、気配が遠ざかっていった。外を見ても、走っていく人影はどこにもなかった。' },
+];
+// 「どちらから？」と二回聞いたときの答え。人間は同じことを言い、人でないものは答えが変わる（酔っぱらいと寝ぼけた人は別）
+const ASK = ['こんな時間に、どちらから？', '……すみません、さっき、どちらからって？'];
+const TALK = {
+  '会社員風の男':['会社です。この時間まで、ずっと会議で……', '会社ですよ。……え、二回目ですよね、それ。'],
+  '大学生くらいの女性':['友達の家から。レポート終わんなくて。', 'え？　だから友達の家。すぐそこのマンション。'],
+  '酔った中年男':['飲み屋からぁ！　三軒目！', 'えー？　会社……いや、飲み屋か？\nわははは、どこだっけなあ！'],
+  '小柄な老婆':['すぐそこの、坂の上の家からよ。', '坂の上よ。……ふふ、年寄りだと思って、試してる？'],
+  'パジャマの男の子':['……おうち。あの、青い屋根の。', 'あおい、やねの、おうち……\nおかあさん、まってるの。'],
+  '作業着の男':['寮からだよ。これから現場。', '寮だって。……あんた、眠そうだな。大丈夫か？'],
+  '夜勤明けの看護師':['病院からです。夜勤明けで。', '病院ですよ。……ふふ、お互い、頭まわってないね。'],
+  '喪服の男':['……斎場からです。父が、夕方に。', '斎場です。……すみません、いまは、あまり話す気分じゃなくて。'],
+  '黒ずくめの女性':['ライブハウス。終わって、そのまま。', 'だからライブハウス。……耳、まだキーンってしてる。'],
+  '釣り帰りの男':['港だよ。夜釣りの帰り。', '港だって。……あ、生臭いか？　悪いね。'],
+  '配送ドライバー':['営業所からです。これから最後の配達で。', '営業所ですって。……すみません、急いでて。'],
+  '手を痛めた男':['ジムです。バーベル、落としちゃって。', 'ジムですよ。……カッコ悪いんで、あんまり聞かないで。'],
+  'ウサギの被り物の人':['飲み会。罰ゲームで、これ被ったまま買い出し。', 'だから飲み会だって！　……ウサギに二回聞く？'],
+  'ピエロのメイクの男':['ハロウィンのイベント帰り。', 'イベントだよ。……ピエロだって、家には帰るさ。'],
+  '人形を抱いた女':['お家から。この子が、起きちゃって。', 'お家からよ。……ね、この子も、そう言ってる。'],
+  'アルミホイルの帽子の男':['観測所だ。……と言っても、うちの屋上だが。', 'うちの屋上だ。……二回聞くってことは、あんたも疑ってるな？'],
+  '警察官':['駅前の交番からです。巡回で。', '交番ですよ。……何か、気になることでも？'],
+  '寝ぼけた男':['……むにゃ……うみ……', '……やま……\n（さっきと答えが違う。……完全に寝ている）'],
+  'ずぶ濡れの女':['……みずの、そこ……', '……ここ。\nここも、もうすぐ、みずのそこ。'],
+  '傘をついた老人':['……駅から。最終の、汽車で。', '……汽車？　はて、わしは、どこから来たんだったか……'],
+  '黒いスーツの男':['本社から参りました。', '……本社？　いえ、地下から参りました。\n……失礼、言い間違えました。'],
+  '白いワンピースの少女':['……おうち。', '……おうち、なくなっちゃった。\nだから、ここに、すむの。'],
+  '笑顔の男':['ふふ、どこからだと思います？', 'さっき？　ずっと、ここにいましたよ。\nあなたの、すぐ後ろに。'],
+  '丁寧な口調の女':['二丁目の、赤い屋根のお宅から。', '……三丁目、でしたかしら。\nどこでもいいでしょう？　ルールは、読んだのでしょう？'],
+  'パーカーの青年':['駅のほうから。', '……駅？\n言ってませんよ、そんなこと。'],
+  '仕事帰りの女性':['会社から。今日も残業で。', '……会社？\nああ、そうだった。わたし、会社から帰る途中だった。……いつから？'],
+  '制服の女子高生':['{name}さんの、おうちの前から。', 'ずっと前から。……ね、{name}さん。'],
+  '近所のおばさん':['お向かいよ。{name}ちゃんちの。', 'あら、言ったじゃない。お向かいよ。\n……あなたの部屋の窓、よく見えるの。'],
+  'サングラスの男':['……ウエ、カラ。', 'ウエ……チガウ。トウキョウ、カラ。\nチキュウジン、デス。'],
+  '銀色の上着の女':['……遠い、ところ、から。', '……遠く、ない。\nあなたたちの、真上、から。'],
+  'もう一人のあなた':['あなたの家から。……わたしの家、でもあるけど。', 'さっき？　あなたが来たのと、同じ道から。'],
+  '母親を名乗る女':['家からよ。決まってるでしょう。', '家よ。……あなたの、新しい家。ここの、奥の。'],
+};
+const TALK_HUMAN = ['近所です。眠れなくて。', 'だから近所ですって。……なにか？'];
+const TALK_GHOST = ['……どちら、から。\n（あなたの言葉を、そのまま繰り返した）', '……さっき？\nさっきって、いつのこと？'];
+// 顔・足元・カメラを見られたときの反応
+const REACT_HUMAN = { feet:['……え、足元に何か落ちてます？', '（客は自分の靴を見下ろして、首をかしげた）'], face:['……あの、顔に何か付いてます？', '（目が合うと、気まずそうにそらされた）'], cam:['（客もつられて、モニターのほうを見上げた）'] };
+const REACT_GHOST = { feet:['……いま、下、見ました？', '……足元は、見ないで。'], face:['……目、そらさないんですね。', '（目が合った。向こうは、一度も瞬きをしない）'], cam:['……カメラ、見てたでしょう。', '（モニターから目を戻すと、客はさっきより少し近くに立っていた）'] };
+
 // ドアの外に来る動物。本物には影があり、瞬きをして、尻尾が動く
 POOL.animal = [
   { type:'animal', animal:'cat', fake:false, who:'黒猫', accept:'店に入れる', reject:'放っておく',
@@ -244,24 +351,30 @@ POOL.animal = [
 function buildNight(){
   const r = Math.random, pick = a => a[Math.floor(r() * a.length)];
   const shuffle = a => a.map(v => [r(), v]).sort((x, y) => x[0] - y[0]).map(v => v[1]);
-  const cust = (e, human) => ({ type:'cust', human, chime:true, shadow:true, cam:true, ...e });
+  const cust = (e, human) => { // セリフが複数あるときは、毎晩どれか一つを言う
+    const c = { type:'cust', human, chime:true, shadow:true, cam:true, ...e };
+    if (e.lines) c.line = pick(e.lines);
+    return c;
+  };
   const phone = (e, caller) => ({ type:'phone', caller, ...e });
   // さっき来た客の偽物。見た目は同じで、チャイム・影・カメラのどれかがおかしい
   const twin = h => {
     const fail = pick(['chime', 'shadow', 'cam']);
     return { ...cust(h, false), [fail]: false, scare: fail === 'cam' ? 'cam' : undefined, who: 'さっきの' + h.who, look: { ...h.look, stare: true, seed: 0 },
       desc: 'さっき来た客だ。……服も、顔も、まったく同じ。', line: '……さっき、ここに来ませんでしたか。\nわたしに、そっくりなひとが。',
+      talk: [(TALK[h.who] || TALK_HUMAN)[0], 'わたし、どこからって言いました？\n……思い出せないんです。さっきのわたしが、どこから来たのか。'],
       aText: '会計を済ませると、それは嬉しそうに言った。「よかった。これで、本物はいらない」',
       rText: '目を伏せてやり過ごした。……最初に来たほうが本物だったのか、急にわからなくなった。' };
   };
-  const humans = shuffle(POOL.human), early = humans.filter(h => !h.late).slice(0, 4);
-  const late = humans.filter(h => !early.includes(h)).slice(0, 3);
+  const humans = shuffle(POOL.human), early = humans.filter(h => !h.late).slice(0, 3);
+  const late = humans.filter(h => !early.includes(h)).slice(0, 2);
+  const seem = shuffle(POOL.seemGhost), sneak = shuffle(POOL.stealth);
   const kind = r() < .5 ? 'cat' : 'dog', fakeAnimal = r() < .35;
   const animal = POOL.animal.find(a => a.animal === kind && a.fake === fakeAnimal);
   const before = [...early.slice(0, 2).map(h => cust(h, true)),
-    ...shuffle([...early.slice(2).map(h => cust(h, true)), cust(pick(POOL.noChime), false), cust(pick(POOL.noShadow), false),
+    ...shuffle([...early.slice(2).map(h => cust(h, true)), cust(seem[0], true), cust(sneak[0], false), cust(pick(POOL.noChime), false), cust(pick(POOL.noShadow), false),
       phone(pick(POOL.honbu), 'honbu'), ...(r() < .8 ? [{ ...animal }] : [])])];
-  const after = shuffle([...late.map(h => cust(h, true)), cust(pick(POOL.noCam), false), cust(pick(POOL.nameCall), false),
+  const after = shuffle([...late.map(h => cust(h, true)), cust(seem[1], true), cust(sneak[1], false), cust(pick(POOL.noCam), false), cust(pick(POOL.nameCall), false),
     phone(pick(POOL.unknown), 'unknown'), cust(pick(POOL.fake), false),
     ...(r() < .7 ? [cust(pick(POOL.alien), false)] : []), ...(r() < .6 ? [twin(pick(early))] : []), ...(r() < .7 ? [MANAGER] : [])]);
   after.splice(Math.floor(r() * 2), 0, cust(pick(POOL.trap), false));
@@ -286,7 +399,7 @@ const ENDINGS = {
 /* ---------- 状態 ---------- */
 const S = {
   name:'ミナミ', idx:-1, shadow:3, comp:0, right:0, total:0, phase:'title', ev:null, cur:null,
-  pose:{ p:0, a:0 }, anim:null, door:0, doorT:0, peek:null, cut:null, view:null, lastView:'feet', closeK:0, dark:null, aisle:null, flash:null, camGhost:0, omenNext:0, omenArmed:false, flashes:0, counterT0:0, pet:null, petHiss:0, animalAt:false, ufo:null, crow:null, moths:null, rat:null, timer:null,
+  pose:{ p:0, a:0 }, anim:null, door:0, doorT:0, peek:null, cut:null, view:null, lastView:'feet', closeK:0, dark:null, aisle:null, flash:null, camGhost:0, omenNext:0, omenArmed:false, flashes:0, counterT0:0, pet:null, petHiss:0, animalAt:false, ufo:null, crow:null, moths:null, rat:null, timer:null, talkN:0, reacted:{}, lineSeq:0, log:[],
   ringing:false, nextRing:0, phoneDisplay:'', red:false, light:1, toast:null, scare:null, pendingEnd:null, lastThump:0,
 };
 const fmt = s => (s || '').split('{name}').join(S.name);
@@ -602,6 +715,18 @@ function drawClothes(g, G, L, rnd){
   if (L.hood){
     g.strokeStyle = shade(L.coat, .35); g.lineWidth = hr * .04;
     for (const sd of [-1, 1]){ g.beginPath(); g.moveTo(hx + sd * fw * .3, neckY + hr * .1); g.lineTo(hx + sd * fw * .35, shY + hr * 1.6); g.stroke(); g.fillStyle = shade(L.coat, .5); ell(g, hx + sd * fw * .35, shY + hr * 1.65, hr * .04, hr * .1); }
+  }
+  if (L.apron){
+    g.strokeStyle = shade(L.apron, -.25); g.lineWidth = hr * .1;
+    for (const sd of [-1, 1]){ g.beginPath(); g.moveTo(cx + sd * sw * .68, shY + hr * .8); g.lineTo(hx + sd * fw * .45, neckY); g.stroke(); }
+    g.fillStyle = hGrad(g, cx - sw * .8, cx + sw * .8, L.apron, -.2, -.3); g.fillRect(cx - sw * .75, shY + hr * .7, sw * 1.5, hipY - shY);
+  }
+  if (L.blood){ // 赤黒い染みと、垂れた跡
+    for (let i = 0; i < 10; i++){
+      const x = cx + (rnd() - .5) * sw * 1.3, y = shY + hr * 1.1 + rnd() * (hipY - shY - hr * .8), r = hr * (.1 + rnd() * .3);
+      g.fillStyle = `rgba(${95 + rnd() * 35 | 0},16,14,${.55 + rnd() * .3})`; ell(g, x, y, r, r * (.8 + rnd() * .5));
+      if (rnd() < .5){ g.fillRect(x - r * .15, y, r * .3, r * (2 + rnd() * 3)); }
+    }
   }
   g.restore();
 }
@@ -1321,7 +1446,15 @@ function endCut(){
   const e = ENDINGS[S.cut.kind]; S.cut = null; S.phase = 'end'; mode('none');
   $('endOv').firstElementChild.classList.toggle('bad', e.kind.startsWith('BAD'));
   $('endKind').textContent = e.kind; $('endTitle').textContent = e.title; $('endText').textContent = fmt(e.text);
-  $('endStats').textContent = `見抜いた判断 ${S.right} / ${S.total}　・　あなたの影 ${Math.max(0, S.shadow)} / 3　・　苦情 ${S.comp} 件`;
+  // 答え合わせ：見誤った相手の正体を明かす
+  const truth = ({ ev, good }) => ev.type === 'phone' ? (good ? '本部からの電話だった' : '出てはいけない電話だった')
+    : ev.type === 'animal' ? (good ? '本物の' + ev.who + 'だった' : ev.who + 'ではなかった') : (good ? '人間だった' : '人間ではなかった');
+  const act = ({ ev, accept, timeout }) => timeout ? '迷っているうちに時間切れ' : ev.type === 'phone' ? (accept ? '電話に出た' : '出なかった')
+    : ev.type === 'animal' ? (accept ? '店に入れた' : '放っておいた') : (accept ? '接客した' : '目を伏せた');
+  const miss = S.log.filter(l => l.accept !== l.good);
+  $('endStats').innerHTML = `<div>見抜いた判断 ${S.right} / ${S.total}　・　あなたの影 ${Math.max(0, S.shadow)} / 3　・　苦情 ${S.comp} 件</div>`
+    + (miss.length ? `<div class="miss">答え合わせ ── 見誤った相手<ul>${miss.map(l => `<li><b>${l.ev.type === 'phone' ? '電話（' + l.ev.display + '）' : l.ev.who}</b>　${truth(l)}（${act(l)}）</li>`).join('')}</ul></div>`
+      : '<div class="miss">見誤った相手は、いなかった。</div>');
   $('endOv').hidden = false; $('bRetry').focus({ preventScroll: true });
 }
 
@@ -1366,7 +1499,7 @@ function render(now){
 }
 
 /* ---------- 進行 ---------- */
-const bAccept = $('bAccept'), bReject = $('bReject'), bNext = $('bNext'), bFace = $('bFace'), bFeet = $('bFeet'), bCam = $('bCam'), bManual = $('bManual');
+const bAccept = $('bAccept'), bReject = $('bReject'), bNext = $('bNext'), bFace = $('bFace'), bFeet = $('bFeet'), bCam = $('bCam'), bManual = $('bManual'), bTalk = $('bTalk');
 let typeTimer = null, typeFull = '';
 function typeLine(s){
   clearInterval(typeTimer); typeFull = s; const el = $('line'); el.textContent = '';
@@ -1391,6 +1524,7 @@ function mode(m, ev){
     bAccept.insertAdjacentHTML('beforeend', '<kbd>1</kbd>'); bReject.insertAdjacentHTML('beforeend', '<kbd>2</kbd>');
   }
   bFeet.disabled = S.phase !== 'counter';
+  bTalk.disabled = S.phase !== 'counter' || S.talkN >= ASK.length;
   bFace.disabled = S.phase !== 'counter' && S.phase !== 'animal';
   bCam.disabled = ['title', 'end', 'cut'].includes(S.phase);
   bManual.disabled = S.phase === 'end' || S.phase === 'cut';
@@ -1402,6 +1536,33 @@ function setView(v){
   bFace.classList.toggle('on', v === 'face'); bFace.firstChild.textContent = v === 'face' ? '離れる' : '顔を見る';
   bCam.classList.toggle('on', v === 'cam'); bCam.firstChild.textContent = v === 'cam' ? 'カメラを閉じる' : '防犯カメラ';
 }
+// 話しかける。二回目は同じことを聞き直して、答えが変わるかを見る
+function talkTo(){
+  if (S.phase !== 'counter' || S.talkN >= ASK.length) return;
+  const ev = S.ev, n = S.talkN++, t = ev.talk || TALK[ev.who] || (ev.human ? TALK_HUMAN : TALK_GHOST);
+  S.lineSeq++; sClick();
+  say(ev.who, 'あなた「' + ASK[n] + '」', fmt(t[n]), ev.items);
+  if (S.timer) S.timer.t0 = Math.min(performance.now(), S.timer.t0 + 2500); // 聞いている間は、少しだけ待ってくれる
+  bTalk.disabled = S.talkN >= ASK.length;
+}
+// 顔・足元・カメラを見たとき、客が気づいて何か言うことがある
+function react(v){
+  const ev = S.ev;
+  if (S.phase !== 'counter' || !ev || S.reacted[v]) return;
+  S.reacted[v] = true;
+  const caught = v === 'feet' ? !ev.shadow : v === 'cam' ? ev.cam !== true : !ev.human;
+  const pick = a => a[Math.floor(Math.random() * a.length)];
+  let line = ev.react && ev.react[v];
+  if (!line && !ev.human && caught && Math.random() < (v === 'face' ? .4 : .6)) line = pick(REACT_GHOST[v]);
+  else if (!line && ev.human && Math.random() < .3) line = pick(REACT_HUMAN[v]);
+  if (!line) return;
+  const seq = ++S.lineSeq;
+  setTimeout(() => {
+    if (S.ev !== ev || S.phase !== 'counter' || S.lineSeq !== seq) return;
+    $('desc').textContent = fmt(ev.desc); typeLine(fmt(line));
+    if (!ev.human) sWhisper(0);
+  }, 900);
+}
 function toast(text, x, y, faint){ S.toast = { text, x: x || 480, y: y || 172, t0: performance.now(), faint }; }
 function startTimer(ms){ S.timer = { t0: performance.now(), dur: ms }; }
 function stopTimer(){ S.timer = null; $('timer').style.transform = 'scaleX(0)'; $('timerWrap').classList.remove('low'); }
@@ -1409,13 +1570,14 @@ function stopTimer(){ S.timer = null; $('timer').style.transform = 'scaleX(0)'; 
 function startGame(){
   S.name = $('nameIn').value.trim() || 'ミナミ';
   NIGHT = buildNight();
-  Object.assign(S, { idx:-1, shadow:3, comp:0, right:0, total:0, red:false, pendingEnd:null, cur:null, ev:null, scare:null, door:0, doorT:0, peek:null, cut:null, view:null, dark:null, aisle:null, flash:null, camGhost:0, omenNext:0, omenArmed:false, flashes:0, pet:null, petHiss:0, animalAt:false, ufo:null, crow:null, moths:null, rat:null });
+  Object.assign(S, { idx:-1, shadow:3, comp:0, right:0, total:0, log:[], red:false, pendingEnd:null, cur:null, ev:null, scare:null, door:0, doorT:0, peek:null, cut:null, view:null, dark:null, aisle:null, flash:null, camGhost:0, omenNext:0, omenArmed:false, flashes:0, pet:null, petHiss:0, animalAt:false, ufo:null, crow:null, moths:null, rat:null });
   $('redRule').hidden = true; bManual.classList.remove('glow');
   hud(); audioInit(); next();
   if (navigator.wakeLock) navigator.wakeLock.request('screen').catch(() => {}); // プレイ中は画面を消さない
 }
 function next(){
   stopTimer(); S.ringing = false; S.phoneDisplay = ''; S.cur = null; S.ev = null; S.anim = null; S.doorT = 0; S.animalAt = false;
+  S.talkN = 0; S.reacted = {}; S.lineSeq++;
   if (S.pendingEnd) return ending(S.pendingEnd);
   const ev = NIGHT[++S.idx];
   if (!ev) return ending(S.shadow === 3 && S.comp === 0 ? 'true' : 'survive');
@@ -1434,7 +1596,10 @@ function next(){
     say(ev.who, fmt(ev.desc), fmt(ev.line)); mode('decide', ev); startTimer(16000);
   } else {
     S.cur = ev; S.phase = 'enter'; say('', '', ''); mode('none');
-    if (ev.chime){ S.doorT = 1; sChime(); toast('♪ ピンポーン'); S.pose = { p:0, a:1 }; S.anim = { t0: performance.now(), dur: 2300, kind: 'walkin', done: arrive }; }
+    if (ev.chime || ev.walk){ // walk: ドアは開いて歩いてくるが、チャイムは鳴らない
+      S.doorT = 1; if (ev.chime){ sChime(); toast('♪ ピンポーン'); }
+      S.pose = { p:0, a:1 }; S.anim = { t0: performance.now(), dur: 2300, kind: 'walkin', done: arrive };
+    }
     else { S.pose = { p:1, a:0 }; S.anim = { t0: performance.now(), dur: 2000, kind: 'fadein', done: arrive }; }
   }
 }
@@ -1451,7 +1616,8 @@ function arrive(){
 function decide(accept, timeout){
   if (!['counter', 'phone', 'animal'].includes(S.phase)) return;
   const ev = S.ev, good = ev.type === 'phone' ? ev.caller === 'honbu' : ev.type === 'animal' ? !ev.fake : ev.human;
-  stopTimer(); S.ringing = false; S.total++;
+  stopTimer(); S.ringing = false; S.total++; S.lineSeq++;
+  S.log.push({ ev, good, accept, timeout });
   if (accept === good) S.right++;
   else if (accept){
     S.shadow--;
@@ -1538,9 +1704,10 @@ bManual.onclick = openManual;
 bAccept.onclick = () => decide(true, false);
 bReject.onclick = () => decide(false, false);
 bNext.onclick = next;
-bFeet.onclick = () => { if (S.phase === 'counter'){ setView(S.view === 'feet' ? null : 'feet'); sClick(); } };
-bFace.onclick = () => { if (!bFace.disabled){ setView(S.view === 'face' ? null : 'face'); sClick(); } };
-bCam.onclick = () => { if (!bCam.disabled){ setView(S.view === 'cam' ? null : 'cam'); sClick(); } };
+bFeet.onclick = () => { if (S.phase === 'counter'){ setView(S.view === 'feet' ? null : 'feet'); sClick(); if (S.view) react('feet'); } };
+bFace.onclick = () => { if (!bFace.disabled){ setView(S.view === 'face' ? null : 'face'); sClick(); if (S.view) react('face'); } };
+bCam.onclick = () => { if (!bCam.disabled){ setView(S.view === 'cam' ? null : 'cam'); sClick(); if (S.view) react('cam'); } };
+bTalk.onclick = talkTo;
 cv.addEventListener('click', () => { if (S.cut && performance.now() - S.cut.t0 > 500) endCut(); });
 $('bRetry').onclick = () => { $('endOv').hidden = true; S.phase = 'title'; mode('none'); $('clock').textContent = '00:00'; say('', '', ''); $('titleOv').hidden = false; };
 $('mute').onclick = () => { A.muted = !A.muted; if (A.m) A.m.gain.value = A.muted ? 0 : .9; $('mute').textContent = A.muted ? '音 OFF' : '音 ON'; };
@@ -1555,6 +1722,7 @@ addEventListener('keydown', e => {
   else if (k === 'f' && !bFeet.disabled) bFeet.click();
   else if (k === 'v' && !bFace.disabled) bFace.click();
   else if (k === 'c' && !bCam.disabled) bCam.click();
+  else if (k === 't' && !bTalk.disabled) bTalk.click();
   else if (k === 'm' && !bManual.disabled) bManual.click();
   else if ((k === 'enter' || k === ' ') && !bNext.hidden && document.activeElement !== bNext){ e.preventDefault(); bNext.click(); }
 });
