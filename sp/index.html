@@ -61,10 +61,15 @@
     <h1>深夜三時のレジ</h1>
     <p>今夜からひとりで夜勤に入る。前の担当者から引き継いだのは、店の鍵と手書きのマニュアル一冊だけ。</p>
     <p>来る客を見て、接客するか、目を伏せてやり過ごすかを決める。人間を無視すれば苦情が入る。人間ではないものに接客すれば、あなたの影が薄くなる。</p>
-    <p>夜勤は三日間。前の夜の判断は、次の夜に返ってくる。</p>
+    <p>夜勤は三日間。前の夜の判断は、次の夜に返ってくる。夜を越えると、影は元に戻る。</p>
     <div class="field">
       <label for="nameIn">あなたの名前（名札には書かれません）</label>
       <input id="nameIn" maxlength="8" placeholder="例：ミナミ" autocomplete="off">
+    </div>
+    <div class="field">
+      <span class="lbl">難易度</span>
+      <div class="seg" role="group" aria-label="難易度"><button id="dNormal" type="button" class="on" aria-pressed="true">ノーマル</button><button id="dHard" type="button" aria-pressed="false">ハード</button></div>
+      <p class="muted" id="dDesc"></p>
     </div>
     <div class="field">
       <label for="seedIn">夜の番号（空欄なら毎回ちがう夜。友達と同じ番号を入れると、同じ客が来る）</label>

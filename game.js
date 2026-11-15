@@ -563,7 +563,7 @@ function buildNight(n, carry){
   const finale = n === 3 || r() < .5 ? [FAKE_SATO, { ...REAL_SATO, t:'06:04' }] : [{ ...REAL_SATO, t:'06:00' }];
   const intro = n === 1 ? INTRO : { type:'narr', t:'00:00', who:`${KANJI[n]}日目　午前0時`, text:[
     n === 2 ? '二日目の夜。マニュアルに、新しいページが増えている。' : '三日目の夜。今夜で、研修は終わる。',
-    carry.restored ? '一晩眠ったら、影が少しだけ戻った気がする。' : '',
+    carry.restored ? '一晩眠ったら、影が元に戻った。' : '',
     carry.complaints ? `昨夜の苦情は${carry.complaints}件。本部から、注意のメモが届いていた。` : '',
     carry.ghosts.length ? '昨夜、店に入れてしまったものの気配が、まだ残っている。' : '',
   ].filter(Boolean).join('\n') };
@@ -573,7 +573,7 @@ function buildNight(n, carry){
     if (e.type !== 'phone' || e.caller !== 'honbu') return;
     const tgt = N.slice(i + 1).find(x => x.type === 'cust' && !x.human);
     e.aText = (carry && carry.complaints ? '「本部です。昨夜、お客様から『店員に無視された』とお電話がありました。……気をつけてくださいね」\n' : '') + e.aText
-      + (tgt ? `\n「それと、近くの店舗から連絡がありました。今夜は、${flawText(tgt)}客が出るそうです」` : '');
+      + (tgt && S.diff !== 'hard' ? `\n「それと、近くの店舗から連絡がありました。今夜は、${flawText(tgt)}客が出るそうです」` : '');
   });
   return N;
 }
@@ -603,11 +603,17 @@ const S = {
   name:'ミナミ', idx:-1, shadow:3, comp:0, right:0, total:0, phase:'title', ev:null, cur:null,
   pose:{ p:0, a:0 }, anim:null, door:0, doorT:0, peek:null, cut:null, view:null, lastView:'feet', closeK:0, dark:null, aisle:null, flash:null, camGhost:0, omenNext:0, omenArmed:false, flashes:0, counterT0:0, pet:null, petHiss:0, animalAt:false, ufo:null, crow:null, moths:null, rat:null, timer:null, talkN:0, reacted:{}, lineSeq:0, log:[],
   ringing:false, nextRing:0, phoneDisplay:'', red:false, light:1, toast:null, scare:null, pendingEnd:null, lastThump:0,
-  night:1, seed:1, used:new Set(), frags:new Set(), forged:false, hidden:false, anom:null, lastAnom:null, falseRep:0, partner:null, endKind:null,
+  night:1, diff:'normal', seed:1, used:new Set(), frags:new Set(), forged:false, hidden:false, anom:null, lastAnom:null, falseRep:0, partner:null, endKind:null,
 };
 const fmt = s => (s || '').split('{name}').join(S.name);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[c]));
 // 夜の番号（シード）。URLの ?n=12345 で、友達と同じ夜を遊べる
+// 難易度。ノーマルとハードで、考える時間・苦情の減り方・ヒントの有無が変わる
+const DIFF = {
+  normal:{ label:'ノーマル', time:1, desc:'夜を越えると、影は元に戻り、苦情も一件減る。本部の電話は、このあと来るものの特徴を教えてくれる。' },
+  hard:  { label:'ハード', time:.7, desc:'夜を越えると影は戻るが、苦情は減らない。考える時間が短く、本部はヒントをくれない。異変はすぐに近づき、見間違いの報告は一回で苦情になる。' },
+};
+const URLDIFF = (() => { try { return new URLSearchParams(location.search).get('d') === 'hard' ? 'hard' : ''; } catch (e) { return ''; } })();
 const URLSEED = (() => { try { const v = parseInt(new URLSearchParams(location.search).get('n'), 10); return v > 0 && v < 100000 ? v : 0; } catch (e) { return 0; } })();
 // 客の図鑑。見抜いた客・見たエンディング・集めた切れ端を、この端末に覚えておく
 const DEX_KEY = 'shinya-register-dex';
@@ -1753,7 +1759,7 @@ function endCut(){
   const k = S.cut.kind, e = ENDINGS[k]; S.cut = null; S.phase = 'end'; S.endKind = k; mode('none');
   DEX.ends[k] = 1; dexSave();
   showEnd(e.kind, e.title, fmt(e.text), e.kind.startsWith('BAD'),
-    `<div>${KANJI[S.night]}日目まで　・　見抜いた判断 ${S.right} / ${S.total}　・　あなたの影 ${Math.max(0, S.shadow)} / 3　・　苦情 ${S.comp} 件</div>`
+    `<div>${DIFF[S.diff].label}　・　${KANJI[S.night]}日目まで　・　見抜いた判断 ${S.right} / ${S.total}　・　あなたの影 ${Math.max(0, S.shadow)} / 3　・　苦情 ${S.comp} 件</div>`
     + `<div class="seed">夜の番号 #${S.seed}　同じ番号を入れると、同じ客が来る</div>` + missHTML(S.log, true), true);
 }
 // 一日目・二日目の朝。次の夜へ進む
@@ -1825,7 +1831,7 @@ function say(who, desc, line, items){
 function hud(){
   $('shadowPips').innerHTML = [0, 1, 2].map(i => `<span class="${i < S.shadow ? '' : 'off'}"></span>`).join('');
   $('compPips').innerHTML = [0, 1, 2].map(i => `<span class="${i < S.comp ? 'on' : ''}"></span>`).join('');
-  $('clock').previousElementSibling.textContent = `${KANJI[S.night]}日目 AM`;
+  $('clock').previousElementSibling.textContent = `${S.diff === 'hard' ? 'ハード・' : ''}${KANJI[S.night]}日目 AM`;
 }
 // マニュアルを、今夜の分だけ書き直す。3時を過ぎると誰かが偽のルールを書き足す
 function renderRules(){
@@ -1878,7 +1884,7 @@ function talkTo(){
   const ev = S.ev, n = S.talkN++, t = ev.talk || TALK[ev.who] || (ev.human ? TALK_HUMAN : TALK_GHOST);
   S.lineSeq++; sClick();
   say(ev.who, 'あなた「' + ASK[n] + '」', fmt(t[n]), ev.items);
-  if (S.timer) S.timer.t0 = Math.min(performance.now(), S.timer.t0 + 2500); // 聞いている間は、少しだけ待ってくれる
+  if (S.timer && S.diff !== 'hard') S.timer.t0 = Math.min(performance.now(), S.timer.t0 + 2500); // ノーマルでは、聞いている間は少しだけ待ってくれる
   bTalk.disabled = S.talkN >= ASK.length;
 }
 // 顔・足元・カメラを見たとき、客が気づいて何か言うことがある
@@ -1889,8 +1895,8 @@ function react(v){
   const caught = v === 'feet' ? !ev.shadow : v === 'cam' ? ev.cam !== true : v === 'id' ? !!(ev.id && ev.id.flaw) : !ev.human;
   const pick = a => a[Math.floor(Math.random() * a.length)];
   let line = ev.react && ev.react[v];
-  if (!line && !ev.human && caught && Math.random() < (v === 'face' ? .4 : .6)) line = pick(REACT_GHOST[v]);
-  else if (!line && ev.human && Math.random() < .3) line = pick(REACT_HUMAN[v]);
+  if (!line && !ev.human && caught && Math.random() < (v === 'face' ? .4 : .6) * (S.diff === 'hard' ? .5 : 1)) line = pick(REACT_GHOST[v]);
+  else if (!line && ev.human && Math.random() < .3 * (S.diff === 'hard' ? .5 : 1)) line = pick(REACT_HUMAN[v]);
   if (!line) return;
   const seq = ++S.lineSeq;
   setTimeout(() => {
@@ -1900,7 +1906,7 @@ function react(v){
   }, 900);
 }
 function toast(text, x, y, faint){ S.toast = { text, x: x || 480, y: y || 172, t0: performance.now(), faint }; }
-function startTimer(ms){ S.timer = { t0: performance.now(), dur: ms }; }
+function startTimer(ms){ S.timer = { t0: performance.now(), dur: ms * DIFF[S.diff].time }; }
 function stopTimer(){ S.timer = null; $('timer').style.transform = 'scaleX(0)'; $('timerWrap').classList.remove('low'); }
 
 function startGame(){
@@ -1925,7 +1931,9 @@ function carryFrom(n){
 // 夜をはじめる。二日目からは、影が一つ戻り、苦情が一つ減る
 function startNight(n){
   let restored = false;
-  if (n > 1){ restored = S.shadow < 3; S.shadow = Math.min(3, S.shadow + 1); S.comp = Math.max(0, S.comp - 1); bManual.classList.add('glow'); }
+  if (n > 1){ // 夜を越えると影は元に戻る。苦情が減るのはノーマルだけ
+    restored = S.shadow < 3; S.shadow = 3; if (S.diff !== 'hard') S.comp = Math.max(0, S.comp - 1); bManual.classList.add('glow');
+  }
   const carry = n > 1 ? { ...carryFrom(n - 1), restored } : null;
   S.night = n; NIGHT = buildNight(n, carry);
   Object.assign(S, { idx:-1, red:false, forged:false, pendingEnd:null, cur:null, ev:null, partner:null, scare:null, door:0, doorT:0, peek:null, cut:null, view:null, dark:null, aisle:null, flash:null, camGhost:0, omenNext:0, omenArmed:false, flashes:0, petHiss:0, animalAt:false, ufo:null, crow:null, moths:null, rat:null, anom:null });
@@ -1978,7 +1986,7 @@ function arrive(){
 // 二日目から、ときどき店の中が変わる。報告しないまま4組やり過ごすと、それが近づいてくる
 function anomTick(){
   if (S.night < 2) return '';
-  if (S.anom && S.idx - S.anom.at >= 4){
+  if (S.anom && S.idx - S.anom.at >= (S.diff === 'hard' ? 3 : 4)){
     const k = S.anom.kind; S.anom = null; S.shadow--; S.total++;
     S.log.push({ anom:k, good:true, accept:false, night:S.night });
     if (!S.scare){ S.scare = { t0: performance.now(), dur: RM ? 600 : 1100, kind:'face', ev: SHADOWMAN }; sScare(); }
@@ -2000,7 +2008,7 @@ function report(){
     if (gainFrag(2)) setTimeout(() => toast('（棚の下に、紙の切れ端が落ちていた）', 480, 230), 1900);
   } else {
     S.falseRep++;
-    if (S.falseRep % 2 === 0){ S.comp++; hud(); toast('本部「見間違いの報告が続いています」', 480, 200); if (S.comp >= 3 && !S.pendingEnd) S.pendingEnd = 'fired'; }
+    if (S.diff === 'hard' || S.falseRep % 2 === 0){ S.comp++; hud(); toast('本部「見間違いの報告が続いています」', 480, 200); if (S.comp >= 3 && !S.pendingEnd) S.pendingEnd = 'fired'; }
     else toast('……見間違いだったらしい。', 480, 200);
   }
 }
@@ -2119,8 +2127,8 @@ $('bSame').onclick = () => toTitle(S.seed);
 $('bNextNight').onclick = () => { $('endOv').hidden = true; startNight(S.night + 1); };
 // 結果をシェア。同じ番号のURLを付ける
 $('bShare').onclick = () => {
-  const url = location.href.split(/[?#]/)[0] + '?n=' + S.seed, e = ENDINGS[S.endKind];
-  const text = `深夜三時のレジ　夜の番号 #${S.seed}\n${e.kind}「${e.title}」　${KANJI[S.night]}日目まで／見抜いた判断 ${S.right}/${S.total}`;
+  const url = location.href.split(/[?#]/)[0] + '?n=' + S.seed + (S.diff === 'hard' ? '&d=hard' : ''), e = ENDINGS[S.endKind];
+  const text = `深夜三時のレジ　夜の番号 #${S.seed}（${DIFF[S.diff].label}）\n${e.kind}「${e.title}」　${KANJI[S.night]}日目まで／見抜いた判断 ${S.right}/${S.total}`;
   if (navigator.share) navigator.share({ title: '深夜三時のレジ', text, url }).catch(() => {});
   else if (navigator.clipboard) navigator.clipboard.writeText(text + '\n' + url).then(() => { $('bShare').textContent = 'コピーしました'; }, () => {});
 };
@@ -2175,5 +2183,13 @@ if (fsBtn) fsBtn.onclick = () => {
   else if (document.documentElement.requestFullscreen) document.documentElement.requestFullscreen().catch(() => {});
 };
 if (URLSEED) $('seedIn').value = URLSEED;
+// 難易度の切り替え。前回選んだほうを覚えておく
+function setDiff(d){
+  S.diff = d; try { localStorage.setItem('shinya-register-diff', d); } catch (e) {}
+  ['normal', 'hard'].forEach(k => { const b = $(k === 'normal' ? 'dNormal' : 'dHard'); b.classList.toggle('on', k === d); b.setAttribute('aria-pressed', k === d); });
+  $('dDesc').textContent = DIFF[d].desc; hud();
+}
+$('dNormal').onclick = () => setDiff('normal'); $('dHard').onclick = () => setDiff('hard');
+setDiff(URLDIFF || (() => { try { return localStorage.getItem('shinya-register-diff') === 'hard' ? 'hard' : 'normal'; } catch (e) { return 'normal'; } })());
 renderRules(); hud(); mode('none');
 })();
