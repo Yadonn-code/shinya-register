@@ -408,7 +408,7 @@ POOL.pair = [
       aText:'「お疲れさまです……」後輩はふらふらと出ていった。チャイムは、ちゃんと鳴った。', rText:'「……え、僕、見えてます？」後輩は不安そうに自分の手を見つめてから、出ていった。\nあれは、人間だった。' } },
 ];
 // 本部と一桁ちがう番号からの電話。出ると嘘を言われる
-// 午前4時台に、着信音が「運命」の電話が鳴る。表示は本部と同じだが、出たら終わり
+// 午前4時台に、着信音がクラシックの電話が鳴る。表示は本部と同じだが、出たら終わり
 const FATE_CALL = { type:'phone', caller:'fate', ring:'fate', fatal:'fateCall', display:'0120-4XX-XXX 本部',
   aText:'受話器を取った。',
   rText:'着信音は、最後の一音まで鳴りきってから止んだ。\n……表示は「本部」だった。でも、本部の電話は、あんな音では鳴らない。' };
@@ -646,7 +646,7 @@ function buildNight(n, carry){
     carry.ghosts.length ? '昨夜、店に入れてしまったものの気配が、まだ残っている。' : '',
   ].filter(Boolean).join('\n') };
   const N = [intro, ...at(before, 8, 172), { ...NOTE, text: NOTES[n] }, ...at(after, 182, pre.length ? 344 : 352), ...pre, ...finale];
-  // 4時台の客のすぐあとに、「運命」の着信を差しこむ（2人連れのあいだには入れない）
+  // 4時台の客のすぐあとに、クラシックの着信音の電話を差しこむ（2人連れのあいだには入れない）
   const toM = s => +s.slice(0, 2) * 60 + +s.slice(3);
   for (let k = 1; k < N.length - 1; k++){
     const m = toM(N[k].t) + 2 + Math.floor(r() * 3);
@@ -680,7 +680,7 @@ const ENDINGS = {
   fired:  { kind:'BAD END', title:'解雇通知', text:'「お客様から苦情が三件。悪いけど、今日で終わりにしよう」\n受話器の向こうで、店長はそう言った。\n……その声は、なぜか真後ろから聞こえた。' },
   swap:   { kind:'BAD END', title:'交代', text:'自動ドアをくぐる。チャイムは鳴らなかった。\n朝日の中で振り返ると、ガラス越しにレジが見えた。\nそこに立って、こちらに手を振っているのは——{name}だった。' },
   finale: { kind:'BAD END', title:'終演', text:'指揮棒が振り下ろされた瞬間、店の明かりがすべて消えた。\n暗闇の奥から、拍手が聞こえる。百人、千人。\n明かりが戻ったとき、あなたは客席に座っていた。\nステージの上のレジには、もう別の誰かが立っている。' },
-  fateCall:{ kind:'BAD END', title:'運命', text:'受話器を取った。\n受話器の向こうで、誰かが「運命」を口ずさんでいる。……あなたの声で。\nふと見ると、電話の線は、壁から抜けていた。' },
+  fateCall:{ kind:'BAD END', title:'運命', text:'受話器を取った。\n受話器の向こうで、誰かが「{song}」を口ずさんでいる。……あなたの声で。\nふと見ると、電話の線は、壁から抜けていた。' },
   audit:  { kind:'BAD END', title:'監査不合格', text:'翌朝、本部から一通のメールが届いた。件名は「契約終了のお知らせ」。\n添付された監視カメラの画像には、レジに立つあなたが写っていた。\n……その真後ろに、もう一人。' },
   hidden: { kind:'HIDDEN END', title:'引き継ぎの終わり', text:'佐藤さんに鍵を渡して、店を出た。\n朝の光の中で足元を見る。影は、ほんの少しだけ短い。\nでも、もう誰も、あのマニュアルに書き足さない。\n\nロッカーのマニュアルは、最後のページが破り取られていた。' },
 };
@@ -690,9 +690,9 @@ const S = {
   name:'ミナミ', idx:-1, shadow:3, comp:0, right:0, total:0, phase:'title', ev:null, cur:null,
   pose:{ p:0, a:0 }, anim:null, door:0, doorT:0, peek:null, cut:null, view:null, lastView:'feet', closeK:0, dark:null, aisle:null, flash:null, camGhost:0, omenNext:0, omenArmed:false, flashes:0, counterT0:0, pet:null, petHiss:0, animalAt:false, ufo:null, crow:null, moths:null, rat:null, timer:null, talkN:0, reacted:{}, lineSeq:0, log:[],
   ringing:false, nextRing:0, phoneDisplay:'', red:false, light:1, toast:null, scare:null, pendingEnd:null, lastThump:0,
-  night:1, diff:'normal', fateNext:0, fateToast:false, seed:1, used:new Set(), frags:new Set(), forged:false, hidden:false, anom:null, lastAnom:null, falseRep:0, partner:null, endKind:null,
+  night:1, diff:'normal', seed:1, used:new Set(), frags:new Set(), forged:false, hidden:false, anom:null, lastAnom:null, falseRep:0, partner:null, endKind:null,
 };
-const fmt = s => (s || '').split('{name}').join(S.name);
+const fmt = s => (s || '').split('{name}').join(S.name).split('{song}').join((RINGS[S.night] || RINGS[1]).name);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[c]));
 // 夜の番号（シード）。URLの ?n=12345 で、友達と同じ夜を遊べる
 // 難易度。ノーマルとハードで、考える時間・苦情の減り方・ヒントの有無が変わる
@@ -1744,7 +1744,7 @@ function musicStop(){
   b.gain.setTargetAtTime(0, at(), .25); setTimeout(() => b.disconnect(), 1500);
 }
 function playMusic(kind){
-  if (!A.c || !SONGS[kind]) return; musicStop(); fateStop(); S.fateNext = 0;
+  if (!A.c || !SONGS[kind]) return; musicStop();
   const bus = A.bus = A.c.createGain(); bus.gain.value = 1; bus.connect(A.m);
   SONGS[kind](at() + .15, bus);
 }
@@ -1757,21 +1757,22 @@ function violinNote(f, t, dur, d, vol){ // ビブラートのかかった弦の�
   o.connect(bp); bp.connect(g); g.connect(d); o.start(t); lfo.start(t); o.stop(t + dur + .4); lfo.stop(t + dur + .4);
 }
 const NOTE_HZ = n => 440 * Math.pow(2, (n - 69) / 12); // MIDIの音番号 → 周波数
-// ベートーヴェン「運命」の冒頭（パブリックドメイン）。ピアノで一回弾いて、長さ（秒）を返す
-function fatePhrase(t, d){
-  const b = .3, seq = [[0,1],[67,1],[67,1],[67,1],[63,8],[0,1],[65,1],[65,1],[65,1],[62,10],[0,1],[67,1],[67,1],[67,1],[63,1],[68,1],[68,1],[68,1],[67,1],[75,1],[75,1],[75,1],[72,8]];
-  const piano = (n, s, l, v) => { const f = NOTE_HZ(n); tone(f, s, l * 1.4, 'triangle', .1 * v, null, d); tone(f / 2, s, l * 1.4, 'sine', .07 * v, null, d); tone(f * 2.005, s, l * .5, 'sine', .02 * v, null, d); };
-  let s = t; seq.forEach(([n, l]) => { if (n){ piano(n, s, l * b, 1); piano(n - 12, s, l * b, .55); } s += l * b; });
-  return s - t;
-}
-// 「運命」の着信音。古い携帯の着メロのような、硬い電子音で
+// 4時台の着信音。夜ごとに曲が変わる（ベートーヴェン、いずれもパブリックドメイン）
+const RINGS = {
+  1: { name:'運命', line:'♪ ダダダダーン……　ダダダダーン……', toast:'♪ ダダダダーン', wave:'square', vol:.045, b:.17,
+       seq:[[0,1],[79,1],[79,1],[79,1],[75,6],[0,1],[77,1],[77,1],[77,1],[74,7]] },
+  2: { name:'月光', line:'♪ タラララ、タラララ……（ひどくゆっくり）', toast:'♪ タラララ……', wave:'triangle', vol:.07, b:.2,
+       seq:[[68,1],[73,1],[76,1],[68,1],[73,1],[76,1],[68,1],[73,1],[76,1],[68,1],[73,1],[76,1],[69,1],[73,1],[76,1],[69,1],[73,1],[76,1],[69,1],[74,1],[78,1],[69,1],[74,1],[78,3]] },
+  3: { name:'喜びの歌', line:'♪ ミミファソ　ソファミレ……', toast:'♪ ミミファソ', wave:'square', vol:.04, b:.2,
+       seq:[[76,1],[76,1],[77,1],[79,1],[79,1],[77,1],[76,1],[74,1],[72,1],[72,1],[74,1],[76,1],[76,1.5],[74,.5],[74,2]] },
+};
+// 着信音を一回鳴らして、長さ（秒）を返す。古い携帯の着メロのような電子音で
 function fateRing(){
   if (!A.c) return 3;
-  const t = at() + .05, b = .17, seq = [[0,1],[79,1],[79,1],[79,1],[75,6],[0,1],[77,1],[77,1],[77,1],[74,7]];
-  let s = t; seq.forEach(([n, l]) => { if (n){ tone(NOTE_HZ(n), s, l * b * .9, 'square', .045); tone(NOTE_HZ(n) * 2, s, l * b * .5, 'square', .012); } s += l * b; });
+  const R = RINGS[S.night] || RINGS[1], t = at() + .05, b = R.b;
+  let s = t; R.seq.forEach(([n, l]) => { if (n){ tone(NOTE_HZ(n), s, l * b * .9, R.wave, R.vol); tone(NOTE_HZ(n) * 2, s, l * b * .5, R.wave, R.vol * .27); } s += l * b; });
   return s - t;
 }
-function fateStop(){ const f = A.fate; if (!f) return; A.fate = null; f.gain.setTargetAtTime(0, at(), .3); setTimeout(() => f.disconnect(), 1500); }
 const SONGS = {
   funeral(t, d){ // ショパン「葬送行進曲」の冒頭（パブリックドメイン）。低いピアノで二回
     const b = .95, mel = [[58,1],[58,.75],[58,.25],[58,1],[61,.75],[60,.25],[60,.75],[58,.25],[58,.75],[57,.25],[58,2]];
@@ -1946,7 +1947,7 @@ const CUTS = {
       else if (t < 8700) drawScareFace(YOU, (t - 7500) / 1200, now);
       else { ctx.fillStyle = '#000'; ctx.fillRect(0, 0, W, H); }
     },
-    caps: [[300, 4300, '受話器の向こうで、誰かが「運命」を口ずさんでいる。'], [4600, 7300, '……あなたの声で。電話の線は、壁から抜けていた。'], [7600, 9500, '次は、あなたの番。']],
+    caps: [[300, 4300, '受話器の向こうで、誰かが「{song}」を口ずさんでいる。'], [4600, 7300, '……あなたの声で。電話の線は、壁から抜けていた。'], [7600, 9500, '次は、あなたの番。']],
     cues: [[200, fateRing], [2600, fateRing], [4500, () => sDrone(3)], [7500, () => { sScare(); sScream(false); }]] },
   audit: { dur: 9800,
     draw(t, now){
@@ -2170,7 +2171,7 @@ function startNight(n){
   }
   const carry = n > 1 ? { ...carryFrom(n - 1), restored } : null;
   S.night = n; NIGHT = buildNight(n, carry);
-  Object.assign(S, { fateNext:0, fateToast:false, idx:-1, red:false, forged:false, pendingEnd:null, cur:null, ev:null, partner:null, scare:null, door:0, doorT:0, peek:null, cut:null, view:null, dark:null, aisle:null, flash:null, camGhost:0, omenNext:0, omenArmed:false, flashes:0, petHiss:0, animalAt:false, ufo:null, crow:null, moths:null, rat:null, anom:null });
+  Object.assign(S, { idx:-1, red:false, forged:false, pendingEnd:null, cur:null, ev:null, partner:null, scare:null, door:0, doorT:0, peek:null, cut:null, view:null, dark:null, aisle:null, flash:null, camGhost:0, omenNext:0, omenArmed:false, flashes:0, petHiss:0, animalAt:false, ufo:null, crow:null, moths:null, rat:null, anom:null });
   bReport.hidden = n < 2; renderRules(); hud(); audioInit(); next();
 }
 function next(){
@@ -2188,10 +2189,10 @@ function next(){
     if (ev.frag !== undefined){ text += '\n\n' + FRAGS[ev.frag]; gainFrag(ev.frag); }
     say(ev.who, '', text); mode('next');
   } else if (ev.type === 'phone'){
-    S.phase = 'phone'; S.ringing = true; S.nextRing = 0; S.phoneDisplay = ev.display; fateStop();
-    const ring = ev.ring === 'fate' ? '♪ ダダダダーン……　ダダダダーン……' : 'プルルルル……　プルルルル……';
-    say('店の電話', '着信表示：' + ev.display + (ev.fatal && S.diff !== 'hard' ? '　……なぜか、出たら終わりだという気がした。' : ''), ring); mode('decide', ev);
-    toast(ev.ring === 'fate' ? '♪ ダダダダーン' : 'プルルルル……', 130, 400); startTimer(ev.ring === 'fate' ? 14000 : 11000);
+    S.phase = 'phone'; S.ringing = true; S.nextRing = 0; S.phoneDisplay = ev.display;
+    const R = ev.ring === 'fate' ? RINGS[S.night] || RINGS[1] : null;
+    say('店の電話', '着信表示：' + ev.display + (ev.fatal && S.diff !== 'hard' ? '　……なぜか、出たら終わりだという気がした。' : ''), R ? R.line : 'プルルルル……　プルルルル……'); mode('decide', ev);
+    toast(R ? R.toast : 'プルルルル……', 130, 400); startTimer(R ? 14000 : 11000);
   } else if (ev.type === 'animal'){
     S.phase = 'animal'; S.animalAt = true;
     if (!ev.fake) (ev.animal === 'cat' ? sMeow : sBark)();
@@ -2314,16 +2315,9 @@ function update(now){
   if (S.dark && now < S.dark.t0 + S.dark.dur) S.light = 0;
   if (A.hum) A.hum.gain.value = .05 * (.5 + .5 * S.light);
   if (S.ringing && now > S.nextRing){
-    if (S.ev && S.ev.ring === 'fate') S.nextRing = now + fateRing() * 1000 + 700; // 着信音が「運命」
+    if (S.ev && S.ev.ring === 'fate') S.nextRing = now + fateRing() * 1000 + 700; // 着信音がクラシック（夜ごとに曲が変わる）
     else { sRing(); S.nextRing = now + 2600; }
   }
-  // 午前4時台は、有線から「運命」がピアノで流れる。客の音楽が鳴っているあいだは止める
-  const fate = A.c && parseInt($('clock').textContent, 10) === 4 && !['title', 'end', 'cut', 'phone'].includes(S.phase) && !A.bus;
-  if (fate && now > S.fateNext){
-    if (!A.fate){ A.fate = A.c.createGain(); A.fate.gain.value = .6; A.fate.connect(A.m); }
-    if (!S.fateToast){ S.fateToast = true; toast('（有線から、ピアノの音が流れはじめた）', 480, 420, true); }
-    S.fateNext = now + fatePhrase(at() + .1, A.fate) * 1000 + 4500;
-  } else if (!fate && A.fate && !A.bus){ fateStop(); S.fateNext = 0; }
   if (S.cut){
     const C = CUTS[S.cut.kind], t = now - S.cut.t0;
     (C.cues || []).forEach(([ms, fn], i) => { if (t >= ms && !S.cut.cues.has(i)){ S.cut.cues.add(i); fn(); } });
