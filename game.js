@@ -221,7 +221,7 @@ POOL.fake = [
     desc:'エプロン姿の中年女性。あなたの母親に、よく似ている。', line:'{name}、迎えに来たよ。\n……ほら、帰ろう。お店なんか、もういいから。', items:[],
     aText:'差し出された手を取った。母の手は、こんなに細長かっただろうか。自動ドアは、開かなかった。',
     rText:'名札には「研修中」としか書いていない。顔を上げると、誰もいなかった。……あとで実家に電話すると、母はずっと寝ていたと言った。' },
-  { who:'警察官', shadow:false, accept:'奥へ通す',
+  { who:'巡回の警察官', shadow:false, accept:'奥へ通す',
     look:{ h:1.02, coat:'#1d2a44', pants:'#1d2a44', shirt:'#dfe4ea', skin:'#d2b296', hair:'short', hairC:'#1a1a1a', cap:'police', tie:'#14182a', stare:true, feet:'leather', shoes:'#0a0a0a', seed:0 },
     desc:'制服の警察官。無線は、まったく鳴っていない。', line:'巡回中です。この店で、何か変わったことは？\n……念のため、奥を確認させてもらえますか。', items:[],
     talk:['駅前の交番からです。', '……交番？　いえ、本署から。\n……どちらでも、同じでしょう。'],
@@ -331,6 +331,144 @@ const TALK_GHOST = ['……どちら、から。\n（あなたの言葉を、そ
 const REACT_HUMAN = { feet:['……え、足元に何か落ちてます？', '（客は自分の靴を見下ろして、首をかしげた）'], face:['……あの、顔に何か付いてます？', '（目が合うと、気まずそうにそらされた）'], cam:['（客もつられて、モニターのほうを見上げた）'] };
 const REACT_GHOST = { feet:['……いま、下、見ました？', '……足元は、見ないで。'], face:['……目、そらさないんですね。', '（目が合った。向こうは、一度も瞬きをしない）'], cam:['……カメラ、見てたでしょう。', '（モニターから目を戻すと、客はさっきより少し近くに立っていた）'] };
 
+// 未成年。中身は人間だが、お酒やたばこは売ってはいけない（売ると苦情になる）。身分証でしかわからない
+POOL.minor = [
+  { who:'大人っぽい少年', minor:true,
+    look:{ h:.97, coat:'#2a2a2e', pants:'#3a4250', skin:'#e0c2aa', hair:'short', hairC:'#1a1614', hood:true, feet:'sneaker', shoes:'#e8e8e4', seed:8700 },
+    desc:'フードをかぶった若い男。妙に落ち着いている。', lines:['これと、あと十二番。\n……袋、いらないっす。', '缶ビール二本と、十二番ください。\n……身分証？　ああ、はい。'], items:['缶ビール ×2','たばこ（12番）'],
+    talk:['近所っす。……ていうか、関係あります？', 'だから近所っすよ。……早くしてもらっていいすか。'],
+    react:{ id:'……それ、兄貴のじゃないっすよ。俺のっす。' },
+    aText:'翌日、店長から電話があった。「昨日の夜、高校生に酒を売ったろ。カメラに映ってたぞ」', rText:'「……ちっ。年確とかダル」少年は商品を置いて出ていった。身分証の生年月日から数えると、十七歳だった。' },
+  { who:'派手な化粧の女', minor:true,
+    look:{ h:.9, coat:'#c8a4b4', pants:'#2a2430', legs:'#ecd2c0', skirtLen:.3, skin:'#eed6c6', hair:'long', hairC:'#8a5a3a', socks:'#efefea', feet:'sneaker', shoes:'#f0f0ec', seed:9000 },
+    desc:'派手な化粧。大学生に見えなくもない。', lines:['これくださーい。\n……え、年確？　あ、はい。', 'チューハイ三本で！\n……身分証？　あるある、はい。'], items:['チューハイ ×3'],
+    talk:['友達んち！　これから宅飲みで。', 'だから友達んちだって。……え、なに、疑ってる？'],
+    aText:'翌朝、本部から電話があった。「未成年への酒類販売の件で、お話があります」', rText:'「えー、だめ？　……ですよねー」女はあっさり諦めて出ていった。身分証は本物だった。十七歳の。' },
+];
+// 見た目も、チャイムも、影も、カメラも普通。身分証だけがおかしい
+POOL.idFake = [
+  { who:'物静かな男', idFlaw:'born',
+    look:{ h:1.0, coat:'#4a4438', pants:'#2e2a24', shirt:'#d2cabb', lapel:true, skin:'#cdb59e', hair:'slick', hairC:'#2a2826', old:true, feet:'leather', shoes:'#1a1612', seed:9300 },
+    desc:'くたびれたコートの男。古風な話し方をする。', line:'……酒を、ひとつ。\n身分証？　ああ、これでよろしいか。', items:['日本酒（ワンカップ）'],
+    talk:['……駅の、向こうから。', '……駅？　いや、山のほうから。\n……もう、ずいぶん昔のことで。'],
+    aText:'「かたじけない」男はワンカップを大事そうに抱えて出ていった。身分証の生年月日は、百四十年前だった。', rText:'「……そうか、もう、だめか」男は身分証をしまうと、閉じたままのガラス戸をすり抜けて出ていった。' },
+  { who:'品のいい婦人', idFlaw:'photo', photo:{ hair:'short', hairC:'#1a1a1a', skin:'#d0a888', glasses:true, old:false, stubble:true },
+    look:{ h:.9, coat:'#5a3a4a', pants:'#2a2228', inner:'#e8dcd4', cardigan:true, buttons:true, skin:'#e2cab8', hair:'bun', hairC:'#a8a6a2', old:true, feet:'leather', shoes:'#1a1214', seed:9600 },
+    desc:'上品な服装の年配の女性。', line:'ワインを一本。お祝いなの。\n……身分証？　まあ、ご丁寧に。', items:['赤ワイン'],
+    talk:['主人のところから。今夜は、記念日なの。', '……主人？　ああ、主人なら、ここに。\n（婦人は自分の胸を指さした）'],
+    aText:'「ありがとう。主人も、喜ぶわ」……身分証の写真は、まったくの別人だった。', rText:'婦人はにっこり笑うと、身分証の写真と同じ顔になった。それから、出ていった。' },
+  { who:'笑い上戸の若者', idFlaw:'name',
+    look:{ h:.98, coat:'#5a6a3a', pants:'#2a2e24', skin:'#e0c4ac', hair:'messy', hairC:'#6a4a2a', feet:'sneaker', shoes:'#c8c8c0', seed:9900 },
+    desc:'ずっとくすくす笑っている若い男。', line:'これ、ください。ふふ。\nあ、身分証ね。はいはい。', items:['ストロング缶 ×2'],
+    talk:['友達の家から。ふふ。', '……友達？　ふふ、友達っていうか、\nきみの家から。ふふふ。'],
+    aText:'身分証の名前の欄には、あなたの名前が書いてあった。「ふふ。これで、ぼくが{name}だ」', rText:'目を伏せていると、くすくす笑う声が、いつまでも耳の奥に残った。' },
+  { who:'疲れた顔の会社員', idFlaw:'exp',
+    look:{ h:.93, coat:'#2e3240', pants:'#2a2e38', shirt:'#e6e4de', lapel:true, skin:'#e0c6b2', hair:'bob', hairC:'#1e1612', feet:'leather', shoes:'#141414', seed:10200 },
+    desc:'スーツ姿の女性。ひどく疲れた顔をしている。', line:'ハイボール、一本だけ。\n……今日も、帰れなかったなあ。', items:['ハイボール缶'],
+    talk:['会社から。ずっと、会社に。', '……会社？　うん、ずっと。\nもう何年も、帰ってない気がする。'],
+    aText:'「ありがと」……身分証の有効期限は、二十七年前に切れていた。', rText:'目を伏せていると、彼女はため息をついて、ハイボールを冷蔵ケースに戻しに行った。冷蔵ケースの扉は、開かなかった。' },
+  { who:'ジャンパーの中年男', idFlaw:'alive',
+    look:{ h:1.0, coat:'#3a4a5a', pants:'#2a2e32', skin:'#d0b098', hair:'short', hairC:'#3a3632', stubble:true, feet:'sneaker', shoes:'#4a4a48', seed:10500 },
+    desc:'ごく普通の中年男性。', line:'七番を一つ。\n……身分証？　どうぞ。よく、見てください。', items:['たばこ（7番）'],
+    talk:['近所です。', '近所ですよ。……写真、よく見てくださいね。'],
+    react:{ id:'（写真の中の男と、目が合った気がした）' },
+    aText:'身分証を返そうとしたとき、写真の男と目が合った。写真の中で、男はゆっくり瞬きをした。', rText:'目を伏せていると、カウンターに置かれた身分証の中から、くすくす笑う声がした。' },
+];
+// 2人連れ。先に来たほうの会計のあいだ、もう一人は後ろで待っている
+POOL.pair = [
+  { a:{ who:'子連れの母親', human:true,
+      look:{ h:.92, coat:'#7a6a5a', pants:'#3a3430', inner:'#e4dccf', cardigan:true, skin:'#e0c4ae', hair:'pony', hairC:'#3a2a1e', feet:'sneaker', shoes:'#d8d4cc', seed:10800 },
+      desc:'小さな女の子を連れている。疲れた顔だ。', line:'すみません、こんな時間に。\nこの子が、どうしてもアイスって。', items:['ソーダアイス'],
+      talk:['実家からの帰りです。車で。', '実家ですって。……あれ、この子、どこの子？\nさっきから、ついてきて……'],
+      aText:'「すみません、ありがとうございます」母親は出ていった。……女の子の手を、引かずに。', rText:'「……すみません、迷惑でしたね」母親は出ていった。女の子は、まだ店の中にいる。' },
+    b:{ who:'ついてきた女の子', human:false, chime:false, shadow:false,
+      look:{ h:.58, hs:1.3, kid:true, coat:'#d88a9a', pants:'#d88a9a', legs:'#efd2c0', skirtLen:.55, skin:'#efd2c0', hair:'bob', hairC:'#2a1a12', stare:true, feet:'sandal', shoes:'#e85a6a', seed:0 },
+      desc:'さっきの母親と一緒に来た女の子。……母親は、もう店を出たのに。', line:'……ママ、さきに、いっちゃった。\nあたしの、アイスは？', items:['ソーダアイス'],
+      talk:['……ママと、いっしょに。', '……ママ？　あのひと、ママじゃないよ。\nしらないひと。'], react:{ feet:'……みた？' },
+      aText:'アイスを渡すと、女の子はにっこり笑った。「これで、ここのこになれる」\n床に、女の子の影はなかった。', rText:'目を伏せていると、小さな足音がドアへ……向かわずに、レジの内側へ回ってきて、止まった。顔を上げると、誰もいなかった。' } },
+  { a:{ who:'金髪の若い男', human:true,
+      look:{ h:1.02, coat:'#1e1e22', pants:'#3a4256', skin:'#dcbca4', hair:'messy', hairC:'#d8b860', feet:'sneaker', shoes:'#e0e0dc', seed:11100 },
+      desc:'髪を金色に染めた若い男。連れの女を、ちらちら気にしている。', line:'こいつの分も一緒で。\n……おい、何がいいんだよ。', items:['からあげ棒','コーラ ×2'],
+      talk:['ドライブの帰りっす。峠のほう。', '峠っすよ。……あれ、こいつ、どこで乗せたんだっけ。'],
+      aText:'「どもー」男は出ていった。……振り返りもせずに、ひとりで。', rText:'「感じわる」男は舌打ちして、ひとりで出ていった。連れのはずの女は、まだ店の中にいる。' },
+    b:{ who:'金髪の男の連れの女', human:false, chime:false, cam:false, scare:'cam',
+      look:{ h:.94, coat:'#cfd2d0', pants:'#cfd2d0', legs:'#c8ccca', skirtLen:.7, skin:'#c8ccca', hair:'long', hairC:'#0c0c0c', wet:true, pale:true, feet:'leather', shoes:'#cfd2d0', seed:0 },
+      desc:'さっきの男の連れ。長い髪が、濡れたように頬に張りついている。', line:'……あのひと、わたしを、置いていった。\n峠で、また。', items:['お茶（ホット）'],
+      talk:['……峠から。', '……峠の、カーブの、下から。\nずっと、下から。'],
+      aText:'お茶を渡すと、女は「つぎは、あなたの車に乗せてね」と言った。モニターの中のレジ前には、誰も映っていなかった。', rText:'目を伏せていると、濡れた足音が自動ドアへ向かった。ドアは開かなかった。気配だけが、ガラスを通り抜けていった。' } },
+  { a:{ who:'残業帰りの男', human:true,
+      look:{ h:1.0, coat:'#30343c', pants:'#24272e', shirt:'#dcdcd6', tie:'#3a4a6a', lapel:true, skin:'#d4b49c', hair:'short', hairC:'#1e1c1a', glasses:true, feet:'leather', shoes:'#141414', seed:11400 },
+      desc:'疲れたスーツの男。後ろに、顔色の悪い若い男が立っている。', line:'おにぎり二つと、栄養ドリンク。\n……後輩のは、あいつが自分で払うんで。', items:['おにぎり ×2','栄養ドリンク'],
+      talk:['会社です。後輩と、ずっと残業で。', '会社ですよ。……後輩？　ああ、あいつ、三徹目なんすよ。'],
+      aText:'「お先に」男は後輩に手を振って出ていった。', rText:'「……なんだよ」男は舌打ちして出ていった。' },
+    b:{ who:'顔色の悪い後輩', human:true,
+      look:{ h:.98, coat:'#3a3e46', pants:'#2a2c32', shirt:'#d4d6d2', lapel:true, skin:'#c4c6be', hair:'messy', hairC:'#1a1818', pale:true, feet:'leather', shoes:'#1a1a1a', seed:11700 },
+      desc:'さっきの男の後輩らしい。顔が真っ白で、目の下が黒い。', line:'先輩、先に行っちゃった……\n……あ、すみません、これ、お願いします。', items:['エナジードリンク ×3'],
+      talk:['会社です……先輩と、残業で……', '会社です……\n顔色悪いの、徹夜三日目だからです……'],
+      aText:'「お疲れさまです……」後輩はふらふらと出ていった。チャイムは、ちゃんと鳴った。', rText:'「……え、僕、見えてます？」後輩は不安そうに自分の手を見つめてから、出ていった。\nあれは、人間だった。' } },
+];
+// 本部と一桁ちがう番号からの電話。出ると嘘を言われる
+const FAKE_HONBU = { display:'0120-4XX-XX4 本部',
+  aText:'「本部です。……次に来るお客様は、人間です。必ず接客してください」\n受話器を置いてから、番号が本部と一桁違うことに気づいた。',
+  rText:'電話は鳴り続けて、切れた。着信履歴を見ると、番号が本部と一桁だけ違っていた。' };
+// 前任者。日誌の切れ端を4枚集めると、三日目の朝に現れる
+const PREDECESSOR = { type:'cust', who:'研修中の名札の人', human:false, predecessor:true, chime:false, walk:true, shadow:false, cam:true, accept:'影を返す', reject:'目を伏せる',
+  look:{ h:.97, coat:STORE, pants:'#24282a', skin:'#cfc6bc', hair:'messy', hairC:'#2a2622', uniform:true, tag:'研修中', pale:true, feet:'sneaker', shoes:'#d8d6d0', seed:12000 },
+  desc:'あなたと同じ制服。名札には「研修中」。足元が、ひどく薄い。', line:'……はじめまして。前の、担当です。\n最後に、ひとつだけ。……わたしの影を、返してもらえませんか。', items:[],
+  talk:['……この店から。ずっと、この店から。', '……同じ答えでしょう？\nわたしは、もう、ここから出られないから。'],
+  aText:'レジ袋を広げると、あなたの足元の影が少しだけ伸びて、袋の中へ流れこんだ。前の担当はそれを受け取り、深く頭を下げた。「ありがとう。……マニュアルの最後のページは、もう誰も書き足さない」\nチャイムが鳴って、ドアが開いた。今度は、ちゃんと。',
+  rText:'前の担当は、少しだけ笑った。「……それで、いいんです。ルールは、守るものだから」\n顔を上げると、レジの前には誰もいなかった。' };
+const FRAGS = [
+  '一日目。マニュアルどおりにやれば大丈夫だと、店長は言った。\n……店長には、まだ一度も会っていない。',
+  '赤い字は、私の字じゃない。誰かが、夜中に書き足している。',
+  '店の中が、少しずつ変わっていく。気づいて報告すれば、元に戻る。気づかないふりをすると、あれは近づいてくる。',
+  '（留守番電話）「……前任の者です。わたしは、影を取られてしまった。三日目の朝、もう一度だけ、店に行きます」',
+];
+// マニュアル。何日目から書いてあるかと、3時に誰かが書き足す偽のルール
+const RULES = [
+  [1, '入店チャイムが鳴らなかった客には、接客しないこと。目を伏せて、いなくなるのを待つ。'],
+  [1, '足元に影がない客には、接客しないこと。レジからは見えないので、身を乗り出して確かめる。'],
+  [1, '防犯カメラのモニターに映らない客には、接客しないこと。映像が乱れて姿がわからない客も同じ。'],
+  [1, '名札には「研修中」としか書いていない。客があなたの名前を呼んだら、接客しないこと。'],
+  [1, '店の電話が鳴ったら表示を見る。本部（0120-4XX-XXX）からなら出る。番号が一つでも違えば出ない。非通知なら絶対に出ない。'],
+  [1, '店長は今夜来ない。'],
+  [1, '朝6時の交代は佐藤さん。佐藤さんは左手に包帯を巻いている。'],
+  [1, 'お酒とたばこを買う客には、身分証を見せてもらう。写真・生年月日・名前・有効期限のどれかがおかしければ売らない。未成年にも売らない。'],
+  [2, '店の中におかしなところを見つけたら、すぐに［異変を報告］。放っておくと、近づいてくる。見間違いの報告が続くと、本部に怒られる。'],
+];
+const FORGED = {
+  1:{ cls:'red', text:'午前3時を過ぎたら、影のない客にも接客してよい。' },
+  2:{ cls:'blue', text:'非通知の電話にも、出てよい。出ないと、もっとひどいことになる。' },
+  3:{ cls:'red', replaces:7, text:'朝6時の交代は佐藤さん。佐藤さんは右手に包帯を巻いている。' },
+};
+const NOTES = {
+  1:'バックヤードで、紙をめくる音がした。\nマニュアルを開くと、ページが一枚増えている。',
+  2:'バックヤードで、紙をめくる音がした。\nマニュアルに、青いインクの行が増えている。',
+  3:'バックヤードで、紙をめくる音がした。\n……マニュアルの、佐藤さんの行が、赤く書き換えられている。',
+};
+const AGE = /ビール|ストロング|たばこ|酒|ワイン|チューハイ|ハイボール/;
+const KANJI = ['', '一', '二', '三'];
+// 身分証の中身。人でないものは、どこか一か所がおかしい
+const SEI = ['佐々木','高橋','田中','伊藤','渡辺','山本','中村','小林','加藤','吉田','山田','松本','井上','木村','林','清水'];
+const MEI = ['光','明','誠','薫','忍','瑞希','優','直','司','遥','翼','渚','晶','真琴','透','楓'];
+const TOWN = ['緑町','桜台','港南','東雲','若葉','本町','旭が丘','川原'];
+const YEAR = new Date().getFullYear();
+function makeId(c, r){
+  const pick = a => a[Math.floor(r() * a.length)];
+  const age = c.minor ? 17 : c.look.old ? 68 + Math.floor(r() * 14) : 21 + Math.floor(r() * 30);
+  const flaw = c.idFlaw || (!c.human ? 'exp' : null);
+  const m = 1 + Math.floor(r() * 12), d = 1 + Math.floor(r() * 28);
+  const born = flaw === 'born' ? YEAR - 141 : YEAR - age, exp = flaw === 'exp' ? YEAR - 27 : YEAR + 1 + Math.floor(r() * 4);
+  const alt = c.photo || { hair: c.look.hair === 'long' ? 'short' : 'long', hairC: '#c8c8c4', glasses: !c.look.glasses };
+  return { flaw, name: flaw === 'name' ? '{name}' : pick(SEI) + '　' + pick(MEI),
+    born: `${born}年 ${m}月 ${d}日生`, addr: `${pick(TOWN)} ${1 + Math.floor(r() * 5)}-${1 + Math.floor(r() * 20)}-${1 + Math.floor(r() * 12)}`,
+    exp: `${exp}年 ${1 + Math.floor(r() * 12)}月 ${1 + Math.floor(r() * 28)}日まで有効`, look: flaw === 'photo' ? { ...c.look, ...alt, stare: false } : { ...c.look, stare: false } };
+}
+const ANOM_NAME = { sign:'看板の文字', fridge:'冷蔵ケースの顔', hand:'棚から出た手', eyes:'棚の奥の目', steps:'濡れた足跡', redlight:'赤い蛍光灯' };
+const MACHINE = '電話は二十回鳴って、留守番電話に切り替わった。\n「……前任の者です。わたしは、影を取られてしまった。三日目の朝、もう一度だけ、店に行きます」\nメッセージは、そこで切れた。';
+REACT_HUMAN.id = ['……あの、そんなにじっくり見ます？', '（客は少し居心地悪そうに、財布をいじっている）'];
+REACT_GHOST.id = ['……よく、撮れてるでしょう？', '（写真から顔を上げると、客は写真と同じ顔で笑っていた）'];
+
 // ドアの外に来る動物。本物には影があり、瞬きをして、尻尾が動く
 POOL.animal = [
   { type:'animal', animal:'cat', fake:false, who:'黒猫', accept:'店に入れる', reject:'放っておく',
@@ -347,45 +485,108 @@ POOL.animal = [
     aText:'ドアが開くと、犬は四つ足のまま、天井に届くほど背を伸ばした。', rText:'目をそらすと、ドアの外から「……ワン」と、男の声がした。' },
 ];
 
-// 毎晩、名簿から顔ぶれと順番を組み直す。3時の赤いルールの直後には必ず影のない客が来る
-function buildNight(){
-  const r = Math.random, pick = a => a[Math.floor(r() * a.length)];
+// 一晩ぶんの顔ぶれと順番を、夜の番号（シード）から組み立てる。同じ番号なら同じ客が来る
+// carry は前の夜の判断：追い返した人間は文句を言いに、接客してしまったものは「常連」になって戻ってくる
+function buildNight(n, carry){
+  const r = rng(S.seed * 31 + n * 7919), pick = a => a[Math.floor(r() * a.length)];
   const shuffle = a => a.map(v => [r(), v]).sort((x, y) => x[0] - y[0]).map(v => v[1]);
-  const cust = (e, human) => { // セリフが複数あるときは、毎晩どれか一つを言う
+  const fresh = (pool, k) => { // 前の夜までに来た客は、なるべく出さない
+    const f = shuffle(pool.filter(e => !S.used.has(e.who))), out = (f.length >= k ? f : shuffle(pool)).slice(0, k);
+    out.forEach(e => S.used.add(e.who)); return out;
+  };
+  const cust = (e, human) => { // セリフが複数あるときは、毎晩どれか一つを言う。お酒とたばこには身分証がつく
     const c = { type:'cust', human, chime:true, shadow:true, cam:true, ...e };
     if (e.lines) c.line = pick(e.lines);
+    if (AGE.test((c.items || []).join())){ c.age = true; c.accept = c.accept || '販売する'; c.reject = c.reject || '断る'; c.id = makeId(c, r); }
     return c;
   };
   const phone = (e, caller) => ({ type:'phone', caller, ...e });
   // さっき来た客の偽物。見た目は同じで、チャイム・影・カメラのどれかがおかしい
   const twin = h => {
     const fail = pick(['chime', 'shadow', 'cam']);
-    return { ...cust(h, false), [fail]: false, scare: fail === 'cam' ? 'cam' : undefined, who: 'さっきの' + h.who, look: { ...h.look, stare: true, seed: 0 },
+    return { ...cust(h, false), [fail]: false, nodex: true, scare: fail === 'cam' ? 'cam' : undefined, who: 'さっきの' + h.who, look: { ...h.look, stare: true, seed: 0 },
       desc: 'さっき来た客だ。……服も、顔も、まったく同じ。', line: '……さっき、ここに来ませんでしたか。\nわたしに、そっくりなひとが。',
       talk: [(TALK[h.who] || TALK_HUMAN)[0], 'わたし、どこからって言いました？\n……思い出せないんです。さっきのわたしが、どこから来たのか。'],
       aText: '会計を済ませると、それは嬉しそうに言った。「よかった。これで、本物はいらない」',
       rText: '目を伏せてやり過ごした。……最初に来たほうが本物だったのか、急にわからなくなった。' };
   };
-  const humans = shuffle(POOL.human), early = humans.filter(h => !h.late).slice(0, 3);
-  const late = humans.filter(h => !early.includes(h)).slice(0, 2);
-  const seem = shuffle(POOL.seemGhost), sneak = shuffle(POOL.stealth);
-  const kind = r() < .5 ? 'cat' : 'dog', fakeAnimal = r() < .35;
-  const animal = POOL.animal.find(a => a.animal === kind && a.fake === fakeAnimal);
-  const before = [...early.slice(0, 2).map(h => cust(h, true)),
-    ...shuffle([...early.slice(2).map(h => cust(h, true)), cust(seem[0], true), cust(sneak[0], false), cust(pick(POOL.noChime), false), cust(pick(POOL.noShadow), false),
-      phone(pick(POOL.honbu), 'honbu'), ...(r() < .8 ? [{ ...animal }] : [])])];
-  const after = shuffle([...late.map(h => cust(h, true)), cust(seem[1], true), cust(sneak[1], false), cust(pick(POOL.noCam), false), cust(pick(POOL.nameCall), false),
-    phone(pick(POOL.unknown), 'unknown'), cust(pick(POOL.fake), false),
-    ...(r() < .7 ? [cust(pick(POOL.alien), false)] : []), ...(r() < .6 ? [twin(pick(early))] : []), ...(r() < .7 ? [MANAGER] : [])]);
-  after.splice(Math.floor(r() * 2), 0, cust(pick(POOL.trap), false));
-  const at = (list, from, to) => list.map((e, i) => {
-    const m = Math.round(from + (to - from) * (i + .5) / list.length + (r() - .5) * 6);
-    return { ...e, t: `${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}` };
+  const p = (k, list) => r() < k ? list : [];
+  const early = fresh(POOL.human.filter(h => !h.late), n === 1 ? 3 : 2).map(h => cust(h, true));
+  const late = fresh(POOL.human.filter(h => !early.some(e => e.who === h.who)), n === 1 ? 2 : 1).map(h => cust(h, true));
+  const seem = cust(fresh(POOL.seemGhost, 1)[0], true), sneak = cust(fresh(POOL.stealth, 1)[0], false);
+  const idCase = () => r() < .45 ? cust(fresh(POOL.minor, 1)[0], true) : cust(fresh(POOL.idFake, 1)[0], false);
+  const pair = () => { const q = fresh(POOL.pair, 1)[0], b = { ...cust(q.b, q.b.human), waiting: true }; return [{ ...cust(q.a, q.a.human), partner: b }, b]; };
+  const fakeAnimal = r() < .35, animal = { ...pick(POOL.animal.filter(a => a.fake === fakeAnimal)) };
+  const honbu = () => phone(pick(POOL.honbu), 'honbu'), ghostOf = list => cust(fresh(list, 1)[0], false);
+  const back = []; // 前の夜から戻ってくる客
+  if (carry){
+    carry.humans.forEach(h => back.push({ ...h, nodex:true, returning:true, partner:undefined, waiting:false, react:null, who:'昨夜の' + h.who,
+      desc:'昨夜、目を伏せてやり過ごした客だ。', line:'……昨日の店員さん、ですよね。\n昨日、無視されたんですけど。', talk: h.talk || TALK[h.who] || TALK_HUMAN,
+      aText:'「……今日は、ちゃんとしてくれるんですね」客は少しだけ笑って出ていった。', rText:'「また無視？　本部に言いますからね」客は二度目の舌打ちをして出ていった。' }));
+    carry.ghosts.forEach(g => { // 昨夜見逃されたところは直して、別のところでぼろを出す
+      const was = ['chime', 'shadow', 'cam'].filter(f => g[f] !== true), nf = pick(['chime', 'shadow', 'cam'].filter(f => !was.includes(f)).concat(was.length === 3 ? ['shadow'] : []));
+      back.push({ ...g, nodex:true, returning:true, partner:undefined, waiting:false, react:null, walk:false, chime:true, shadow:true, cam:true, [nf]:false,
+        scare: nf === 'cam' ? 'cam' : undefined, who:'昨夜の' + g.who, look:{ ...g.look, stare:true },
+        desc:'昨夜、接客してしまった客だ。……また来た。', line:'こんばんは。……また、来ちゃいました。\n昨日、いれてくれたから。',
+        talk:['昨日と、同じところから。', '……昨日？　昨日は、どこから来たんだっけ。\nもう、ここに住んでるから、わからないや。'],
+        aText:'「やっぱり、やさしいね」客は嬉しそうに笑った。レジの内側に、知らない足跡が増えていた。', rText:'目を伏せていると「……昨日は、いれてくれたのに」と声がした。顔を上げると、カウンターに昨日のレシートが一枚置かれていた。' });
+    });
+  }
+  let before, after;
+  if (n === 1){
+    before = [...early.slice(0, 2), { type:'narr', who:'引き継ぎノート', frag:0, text:'レジの下に、紙の切れ端が挟まっていた。' },
+      ...shuffle([early[2], seem, idCase(), ghostOf(POOL.noChime), ghostOf(POOL.noShadow), honbu(), ...p(.8, [animal])])];
+    after = shuffle([...late, sneak, ghostOf(POOL.noCam), ghostOf(POOL.nameCall), phone(pick(POOL.unknown), 'unknown'),
+      ...p(.5, [ghostOf(POOL.alien)]), ...p(.5, [twin(pick(early))])]);
+    after.splice(Math.floor(r() * 2), 0, { ...cust(pick(POOL.trap), false), trap:true }); // 赤い字のルールを試しに来る
+  } else if (n === 2){
+    before = [early[0], ...shuffle([early[1], ...back, seem, sneak, pair(), honbu(), phone(FAKE_HONBU, 'fake'),
+      ghostOf(r() < .5 ? POOL.noChime : POOL.noShadow), ...p(.5, [animal])])];
+    after = shuffle([...late, idCase(), ghostOf(POOL.fake), ghostOf(r() < .5 ? POOL.noCam : POOL.nameCall),
+      ...p(.4, [ghostOf(POOL.alien)]), ...p(.6, [MANAGER]), ...p(.4, [twin(pick(early))])]);
+    after.splice(Math.floor(r() * 2), 0, { ...phone(pick(POOL.unknown), 'unknown'), trap:true }); // 青い字のルールを試すように鳴る
+  } else {
+    before = [early[0], ...shuffle([early[1], ...back, seem, sneak, pair(), honbu(), phone(FAKE_HONBU, 'fake'),
+      ghostOf(r() < .5 ? POOL.noChime : POOL.noShadow), idCase()])];
+    after = shuffle([...late, idCase(), ghostOf(r() < .5 ? POOL.noCam : POOL.nameCall), phone(pick(POOL.unknown), 'unknown'), ghostOf(POOL.fake),
+      ...p(.5, [ghostOf(POOL.alien)]), ...p(.5, [MANAGER]), ...p(.5, [twin(pick(early))])]);
+  }
+  const hm = m => `${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`;
+  const at = (list, from, to) => { // 2人連れの2人目は、1人目の2分後
+    list = list.flat(); let last = 0;
+    return list.map((e, i) => {
+      const m = e.waiting ? last + 2 : Math.round(from + (to - from) * (i + .5) / list.length + (r() - .5) * 6);
+      last = m; return { ...e, t: hm(m) };
+    });
+  };
+  const pre = n === 3 && [0, 1, 2, 3].every(i => S.frags.has(i)) ? [{ ...PREDECESSOR, t:'05:54' }] : [];
+  const finale = n === 3 || r() < .5 ? [FAKE_SATO, { ...REAL_SATO, t:'06:04' }] : [{ ...REAL_SATO, t:'06:00' }];
+  const intro = n === 1 ? INTRO : { type:'narr', t:'00:00', who:`${KANJI[n]}日目　午前0時`, text:[
+    n === 2 ? '二日目の夜。マニュアルに、新しいページが増えている。' : '三日目の夜。今夜で、研修は終わる。',
+    carry.restored ? '一晩眠ったら、影が少しだけ戻った気がする。' : '',
+    carry.complaints ? `昨夜の苦情は${carry.complaints}件。本部から、注意のメモが届いていた。` : '',
+    carry.ghosts.length ? '昨夜、店に入れてしまったものの気配が、まだ残っている。' : '',
+  ].filter(Boolean).join('\n') };
+  const N = [intro, ...at(before, 8, 172), { ...NOTE, text: NOTES[n] }, ...at(after, 182, pre.length ? 344 : 352), ...pre, ...finale];
+  // 本部の電話は、このあと来る人でないものの特徴を教えてくれる
+  N.forEach((e, i) => {
+    if (e.type !== 'phone' || e.caller !== 'honbu') return;
+    const tgt = N.slice(i + 1).find(x => x.type === 'cust' && !x.human);
+    e.aText = (carry && carry.complaints ? '「本部です。昨夜、お客様から『店員に無視された』とお電話がありました。……気をつけてくださいね」\n' : '') + e.aText
+      + (tgt ? `\n「それと、近くの店舗から連絡がありました。今夜は、${flawText(tgt)}客が出るそうです」` : '');
   });
-  const finale = r() < .5 ? [FAKE_SATO, { ...REAL_SATO, t:'06:04' }] : [{ ...REAL_SATO, t:'06:00' }];
-  return [INTRO, ...at(before, 8, 172), NOTE, ...at(after, 182, 352), ...finale];
+  return N;
 }
-let NIGHT = buildNight();
+function flawText(e){
+  if (e.id && e.id.flaw) return '身分証がおかしい';
+  if (e.chime === false) return 'チャイムを鳴らさずに入ってくる';
+  if (!e.shadow) return '影のない';
+  if (e.cam === false) return 'カメラに映らない';
+  if (e.cam === 'glitch') return 'カメラの映像を乱す';
+  if (/\{name\}/.test(e.line || '')) return '店員の名前を知っている';
+  return '人のふりをした';
+}
+let NIGHT = [INTRO];
 
 
 const ENDINGS = {
@@ -394,6 +595,7 @@ const ENDINGS = {
   erosion:{ kind:'BAD END', title:'影のない客', text:'ふと気づくと、レジの外側に立っていた。\nカウンターの向こうで、新しい研修生がマニュアルをめくっている。\nあなたは商品を持たずに、レジへ歩いていく。\n床を見る。影は、もう無い。' },
   fired:  { kind:'BAD END', title:'解雇通知', text:'「お客様から苦情が三件。悪いけど、今日で終わりにしよう」\n受話器の向こうで、店長はそう言った。\n……その声は、なぜか真後ろから聞こえた。' },
   swap:   { kind:'BAD END', title:'交代', text:'自動ドアをくぐる。チャイムは鳴らなかった。\n朝日の中で振り返ると、ガラス越しにレジが見えた。\nそこに立って、こちらに手を振っているのは——{name}だった。' },
+  hidden: { kind:'HIDDEN END', title:'引き継ぎの終わり', text:'佐藤さんに鍵を渡して、店を出た。\n朝の光の中で足元を見る。影は、ほんの少しだけ短い。\nでも、もう誰も、あのマニュアルに書き足さない。\n\nロッカーのマニュアルは、最後のページが破り取られていた。' },
 };
 
 /* ---------- 状態 ---------- */
@@ -401,8 +603,21 @@ const S = {
   name:'ミナミ', idx:-1, shadow:3, comp:0, right:0, total:0, phase:'title', ev:null, cur:null,
   pose:{ p:0, a:0 }, anim:null, door:0, doorT:0, peek:null, cut:null, view:null, lastView:'feet', closeK:0, dark:null, aisle:null, flash:null, camGhost:0, omenNext:0, omenArmed:false, flashes:0, counterT0:0, pet:null, petHiss:0, animalAt:false, ufo:null, crow:null, moths:null, rat:null, timer:null, talkN:0, reacted:{}, lineSeq:0, log:[],
   ringing:false, nextRing:0, phoneDisplay:'', red:false, light:1, toast:null, scare:null, pendingEnd:null, lastThump:0,
+  night:1, seed:1, used:new Set(), frags:new Set(), forged:false, hidden:false, anom:null, lastAnom:null, falseRep:0, partner:null, endKind:null,
 };
 const fmt = s => (s || '').split('{name}').join(S.name);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[c]));
+// 夜の番号（シード）。URLの ?n=12345 で、友達と同じ夜を遊べる
+const URLSEED = (() => { try { const v = parseInt(new URLSearchParams(location.search).get('n'), 10); return v > 0 && v < 100000 ? v : 0; } catch (e) { return 0; } })();
+// 客の図鑑。見抜いた客・見たエンディング・集めた切れ端を、この端末に覚えておく
+const DEX_KEY = 'shinya-register-dex';
+const DEX = (() => { let d = {}; try { d = JSON.parse(localStorage.getItem(DEX_KEY)) || {}; } catch (e) {} return { seen:{}, solved:{}, ends:{}, frags:{}, ...d }; })();
+function dexSave(){ try { localStorage.setItem(DEX_KEY, JSON.stringify(DEX)); } catch (e) {} }
+const dexKey = e => e.type === 'animal' ? e.who + (e.fake ? '（偽物）' : '') : e.who;
+function dexMark(ev, ok){
+  if (ev.nodex || ev.type === 'phone') return;
+  const k = dexKey(ev); DEX.seen[k] = 1; if (ok) DEX.solved[k] = 1; dexSave();
+}
 
 /* ---------- 音 ---------- */
 const A = { c:null, m:null, muted:false };
@@ -1199,6 +1414,34 @@ function drawOmens(g, now){
   }
 }
 
+// 店内の異変。二日目から、ときどき店のどこかがおかしくなる
+function drawAnom(g, k, now){
+  g.save();
+  if (k === 'sign'){ // 入口の上の表示
+    g.fillStyle = '#0f1312'; g.fillRect(420, 126, 120, 14);
+    g.fillStyle = '#c4342c'; g.font = '11px "DotGothic16", monospace'; g.textAlign = 'center'; g.fillText('タスケテ　タスケテ', 480, 137);
+  } else if (k === 'fridge'){ // 冷蔵ケースのガラスの向こうの顔と手
+    g.globalAlpha = .55; g.fillStyle = '#cfd8d4'; ell(g, 812, 222, 16, 21); ell(g, 788, 236, 6, 9); ell(g, 836, 236, 6, 9);
+    g.fillStyle = '#050606'; ell(g, 806, 218, 3, 2.2); ell(g, 818, 218, 3, 2.2); g.fillRect(808, 230, 8, 1.5);
+  } else if (k === 'hand'){ // 菓子の棚の商品のすき間から伸びる手
+    g.fillStyle = '#060707'; g.fillRect(196, 236, 30, 18);
+    g.fillStyle = '#c9cfca'; g.beginPath(); g.moveTo(206, 240); g.lineTo(236, 246); g.lineTo(240, 252); g.lineTo(206, 252); g.closePath(); g.fill();
+    g.strokeStyle = '#c9cfca'; g.lineWidth = 2;
+    for (let i = 0; i < 4; i++){ g.beginPath(); g.moveTo(238, 244 + i * 2.5); g.lineTo(252 + i * 1.5, 246 + i * 4 + Math.sin(now / 300 + i) * 1.5); g.stroke(); }
+  } else if (k === 'eyes'){ // 棚の奥の暗がりで光る目
+    g.fillStyle = '#040505'; g.fillRect(286, 282, 34, 16);
+    if ((now / 1000) % 3.4 > .15){ g.fillStyle = 'rgba(235,235,215,.9)'; ell(g, 296, 290, 2.6, 2); ell(g, 310, 290, 2.6, 2); }
+  } else if (k === 'steps'){ // 入口からレジの内側へ続く、濡れた足跡
+    g.fillStyle = 'rgba(160,190,190,.32)';
+    for (let i = 0; i < 7; i++){ const y = 345 + i * 17, x = 470 + i * 9 + (i % 2 ? 9 : -9); ell(g, x, y, 5 + i * .9, 3 + i * .5); }
+  } else if (k === 'redlight'){ // 真ん中の蛍光灯だけ、赤い
+    g.fillStyle = 'rgba(210,30,30,.9)'; g.fillRect(250, 58, 460, 8);
+    const rg = g.createRadialGradient(480, 62, 4, 480, 62, 260); rg.addColorStop(0, 'rgba(200,20,20,.18)'); rg.addColorStop(1, 'rgba(200,20,20,0)');
+    g.fillStyle = rg; g.fillRect(200, 40, 560, 200);
+  }
+  g.restore();
+}
+
 /* ---------- 防犯カメラ ---------- */
 // レジ奥の天井から入口側を映す。店員（あなた）の後ろ頭が手前に入る
 const CAM = mk(W, H), cg = CAM.getContext('2d');
@@ -1210,6 +1453,7 @@ function renderCam(now, o = {}){
   if (aisleOn(now)) drawPerson(g, SHADOWMAN, 250, 345, .38, 1, now, false);
   drawOmens(g, now); drawCreatures(g, now, true);
   const c = o.customer || (o.noCustomer ? null : S.cur);
+  if (!o.customer && S.partner && S.partner.cam === true) drawPerson(g, S.partner, 620, lerp(335, 600, partnerP()), lerp(.42, 1.12, partnerP()), 1, now, false);
   if (c && (o.customer || (c.cam && S.pose.a > 0))){
     const p = o.customer ? 1 : ease(S.pose.p), a = o.customer ? 1 : S.pose.a, walking = !o.customer && !!(S.anim && S.anim.kind.startsWith('walk'));
     drawPerson(g, c, 480, lerp(335, 600, p), lerp(.42, 1.12, p), a, now, walking);
@@ -1240,7 +1484,7 @@ function renderCam(now, o = {}){
   g.drawImage(VIG, 0, 0);
   g.font = '20px "DotGothic16", monospace'; g.fillStyle = 'rgba(235,245,240,.92)';
   g.textAlign = 'left'; g.fillText('CAM-02  REGISTER', 24, 38);
-  g.textAlign = 'right'; g.fillText(`11/14  ${o.clock || $('clock').textContent}:${String(Math.floor(now / 1000) % 60).padStart(2, '0')}`, W - 24, 38);
+  g.textAlign = 'right'; g.fillText(`11/${13 + S.night}  ${o.clock || $('clock').textContent}:${String(Math.floor(now / 1000) % 60).padStart(2, '0')}`, W - 24, 38);
   if (Math.floor(now / 600) % 2 === 0){ g.fillText('REC', W - 50, 72); g.fillStyle = '#e04030'; ell(g, W - 36, 65, 8, 8); }
   g.restore();
 }
@@ -1253,6 +1497,8 @@ function drawMonitor(now){
   ctx.fillText('［防犯カメラ］で拡大', x + w, y + h + 15);
 }
 function drawCamView(){ ctx.drawImage(CAM, 0, 0); }
+// 2人連れの2人目は、1人目が歩いてくるあいだ一緒に入ってきて、後ろで待つ
+const partnerP = () => S.anim && S.anim.kind === 'walkin' && S.cur && S.cur.partner === S.partner ? Math.min(.4, ease(S.pose.p)) : .4;
 function drawPeek(g, now){ // ドアのガラスの向こうに立つ人影
   const a = Math.sin(clamp((now - S.peek.t0) / 2600, 0, 1) * Math.PI), x = S.peek.x;
   g.save(); g.beginPath(); g.rect(406, 146, 148, 189); g.clip();
@@ -1276,6 +1522,43 @@ function drawFaceView(now){
   else if (S.phase === 'animal' && S.ev) drawAnimal(ctx, S.ev, 480, 610, 3.4, now);
   ctx.fillStyle = `rgba(0,0,0,${(1 - S.light) * .5})`; ctx.fillRect(0, 0, W, H);
   ctx.font = '14px "DotGothic16", monospace'; ctx.textAlign = 'left'; ctx.fillStyle = '#d4ddd7'; ctx.fillText('— 顔を、よく見ている —', 20, 34);
+}
+// 身分証。写真は顔のアップを縮めて貼る。人でないものの身分証は、どこか一か所がおかしい
+const PHOTO = mk(W, H), pg = PHOTO.getContext('2d');
+function drawIdView(now){
+  ctx.fillStyle = '#1b211f'; ctx.fillRect(0, 0, W, H);
+  ctx.globalAlpha = .08; ctx.drawImage(NOISE[1], 0, 0, W, H); ctx.globalAlpha = 1;
+  const c = S.cur, id = c && c.id;
+  ctx.font = '14px "DotGothic16", monospace'; ctx.textAlign = 'left'; ctx.fillStyle = '#d4ddd7'; ctx.fillText('— 身分証を見ている —', 20, 34);
+  if (!id || S.phase !== 'counter') return;
+  const x = 140, y = 92, w = 680, h = 390;
+  ctx.fillStyle = 'rgba(0,0,0,.45)'; ctx.fillRect(x + 8, y + 10, w, h);
+  const cg2 = ctx.createLinearGradient(x, y, x + w, y + h); cg2.addColorStop(0, '#eef2ea'); cg2.addColorStop(1, '#d6ddd2');
+  ctx.fillStyle = cg2; ctx.fillRect(x, y, w, h);
+  ctx.fillStyle = '#3f6d5c'; ctx.fillRect(x, y, w, 50);
+  ctx.fillStyle = '#eef6f1'; ctx.font = '24px "Zen Kaku Gothic New", sans-serif'; ctx.fillText('身分証明書', x + 24, y + 34);
+  // 写真
+  const px = x + w - 214, py = y + 74, pw = 180, ph = 222;
+  pg.fillStyle = '#b6c3c6'; pg.fillRect(0, 0, W, H);
+  drawCloseUp(pg, { who: c.who, human: true, look: id.look }, id.flaw === 'alive' ? now : 1500); // ふつうの写真は動かない
+  ctx.drawImage(PHOTO, 330, 85, 300, 371, px, py, pw, ph);
+  ctx.fillStyle = 'rgba(240,235,220,.14)'; ctx.fillRect(px, py, pw, ph);
+  ctx.strokeStyle = '#7f8c86'; ctx.lineWidth = 2; ctx.strokeRect(px, py, pw, ph);
+  // 文字の欄
+  const rows = [['氏名', fmt(id.name)], ['生年月日', id.born], ['住所', id.addr], ['有効期限', id.exp]];
+  rows.forEach(([k, v], i) => {
+    const ry = y + 104 + i * 66;
+    ctx.fillStyle = '#5f6f68'; ctx.font = '15px "Zen Kaku Gothic New", sans-serif'; ctx.fillText(k, x + 26, ry - 22);
+    ctx.fillStyle = '#1e2226'; ctx.font = '26px "Zen Kaku Gothic New", sans-serif'; ctx.fillText(v, x + 26, ry + 8);
+    ctx.fillStyle = 'rgba(30,34,38,.15)'; ctx.fillRect(x + 26, ry + 18, w - 290, 1);
+  });
+  const sh = ctx.createLinearGradient(x, y, x + w, y + h), k = (now / 4000) % 1; // 光の反射
+  sh.addColorStop(clamp(k - .08, 0, 1), 'rgba(255,255,255,0)'); sh.addColorStop(k, 'rgba(255,255,255,.18)'); sh.addColorStop(clamp(k + .08, 0, 1), 'rgba(255,255,255,0)');
+  ctx.fillStyle = sh; ctx.fillRect(x, y, w, h);
+  const d = new Date();
+  ctx.fillStyle = '#d4ddd7'; ctx.font = '16px "DotGothic16", monospace'; ctx.textAlign = 'right';
+  ctx.fillText(`本日　${d.getFullYear()}年 ${d.getMonth() + 1}月 ${d.getDate()}日`, W - 24, H - 26);
+  ctx.fillStyle = `rgba(0,0,0,${(1 - S.light) * .5})`; ctx.fillRect(0, 0, W, H);
 }
 function scanRed(a){
   ctx.fillStyle = `rgba(160,10,10,${a})`; ctx.fillRect(0, 0, W, H);
@@ -1430,6 +1713,10 @@ const CUTS = {
   survive: { dur: 8200,
     draw(t, now){ if (t < 3600) exterior(now, 1, false); else yourFeet('asphalt', S.shadow / 3); },
     caps: [[400, 3500, '朝の光の中を歩いて帰った。'], [3700, 7600, () => S.shadow === 3 ? '足元を見る。影は、ちゃんとある。' : '足元を見る。影は、ちゃんとある。……少しだけ、薄いけれど。']] },
+  hidden: { dur: 11000,
+    draw(t, now){ if (t < 3600) exterior(now, 1, false); else if (t < 7400) yourFeet('asphalt', .75); else storeView(now, true); },
+    caps: [[400, 3500, '朝の光の中を、前の担当と並んで歩いた気がした。'], [3700, 7300, '足元を見る。影は、ほんの少しだけ短い。'], [7600, 10600, 'あのマニュアルには、もう誰も書き足さない。']],
+    cues: [[3700, sChime]] },
 };
 function drawCut(now){
   const C = CUTS[S.cut.kind], t = now - S.cut.t0;
@@ -1441,21 +1728,41 @@ function drawCut(now){
   const f = Math.max(clamp(1 - t / 600, 0, 1), clamp((t - (C.dur - 900)) / 900, 0, 1));
   if (f > 0){ ctx.fillStyle = `rgba(0,0,0,${f})`; ctx.fillRect(0, 0, W, H); }
 }
+// 答え合わせ：見誤った相手の正体を明かす
+function missHTML(logs, withNight){
+  const name = l => l.anom ? '店内の異変（' + ANOM_NAME[l.anom] + '）' : l.ev.type === 'phone' ? '電話（' + l.ev.display + '）' : l.ev.who;
+  const truth = ({ ev, good, anom }) => anom ? '異変だった' : ev.type === 'phone' ? (good ? '本部からの電話だった' : '出てはいけない電話だった')
+    : ev.type === 'animal' ? (good ? '本物の' + ev.who + 'だった' : ev.who + 'ではなかった')
+    : ev.minor ? '未成年だった' : good ? '人間だった' : ev.id && ev.id.flaw ? '人間ではなかった。身分証がおかしかった' : '人間ではなかった';
+  const act = ({ ev, accept, timeout, anom }) => anom ? '報告しなかった' : timeout ? '迷っているうちに時間切れ' : ev.type === 'phone' ? (accept ? '電話に出た' : '出なかった')
+    : ev.type === 'animal' ? (accept ? '店に入れた' : '放っておいた') : ev.age ? (accept ? '販売した' : '断った') : (accept ? '接客した' : '目を伏せた');
+  const miss = logs.filter(l => l.accept !== l.good);
+  return miss.length ? `<div class="miss">答え合わせ ── 見誤った相手<ul>${miss.map(l => `<li>${withNight ? `［${KANJI[l.night]}日目］` : ''}<b>${name(l)}</b>　${truth(l)}（${act(l)}）</li>`).join('')}</ul></div>`
+    : '<div class="miss">見誤った相手は、いなかった。</div>';
+}
+function showEnd(kind, title, text, bad, statsHTML, final){
+  $('endOv').firstElementChild.classList.toggle('bad', bad);
+  $('endKind').textContent = kind; $('endTitle').textContent = title; $('endText').textContent = text;
+  $('endStats').innerHTML = statsHTML;
+  $('bNextNight').hidden = final; ['bRetry', 'bSame', 'bShare', 'bDex2'].forEach(id => { $(id).hidden = !final; });
+  $('bShare').textContent = '結果をシェア';
+  $('endOv').hidden = false; (final ? $('bRetry') : $('bNextNight')).focus({ preventScroll: true });
+}
 function endCut(){
   if (!S.cut) return;
-  const e = ENDINGS[S.cut.kind]; S.cut = null; S.phase = 'end'; mode('none');
-  $('endOv').firstElementChild.classList.toggle('bad', e.kind.startsWith('BAD'));
-  $('endKind').textContent = e.kind; $('endTitle').textContent = e.title; $('endText').textContent = fmt(e.text);
-  // 答え合わせ：見誤った相手の正体を明かす
-  const truth = ({ ev, good }) => ev.type === 'phone' ? (good ? '本部からの電話だった' : '出てはいけない電話だった')
-    : ev.type === 'animal' ? (good ? '本物の' + ev.who + 'だった' : ev.who + 'ではなかった') : (good ? '人間だった' : '人間ではなかった');
-  const act = ({ ev, accept, timeout }) => timeout ? '迷っているうちに時間切れ' : ev.type === 'phone' ? (accept ? '電話に出た' : '出なかった')
-    : ev.type === 'animal' ? (accept ? '店に入れた' : '放っておいた') : (accept ? '接客した' : '目を伏せた');
-  const miss = S.log.filter(l => l.accept !== l.good);
-  $('endStats').innerHTML = `<div>見抜いた判断 ${S.right} / ${S.total}　・　あなたの影 ${Math.max(0, S.shadow)} / 3　・　苦情 ${S.comp} 件</div>`
-    + (miss.length ? `<div class="miss">答え合わせ ── 見誤った相手<ul>${miss.map(l => `<li><b>${l.ev.type === 'phone' ? '電話（' + l.ev.display + '）' : l.ev.who}</b>　${truth(l)}（${act(l)}）</li>`).join('')}</ul></div>`
-      : '<div class="miss">見誤った相手は、いなかった。</div>');
-  $('endOv').hidden = false; $('bRetry').focus({ preventScroll: true });
+  const k = S.cut.kind, e = ENDINGS[k]; S.cut = null; S.phase = 'end'; S.endKind = k; mode('none');
+  DEX.ends[k] = 1; dexSave();
+  showEnd(e.kind, e.title, fmt(e.text), e.kind.startsWith('BAD'),
+    `<div>${KANJI[S.night]}日目まで　・　見抜いた判断 ${S.right} / ${S.total}　・　あなたの影 ${Math.max(0, S.shadow)} / 3　・　苦情 ${S.comp} 件</div>`
+    + `<div class="seed">夜の番号 #${S.seed}　同じ番号を入れると、同じ客が来る</div>` + missHTML(S.log, true), true);
+}
+// 一日目・二日目の朝。次の夜へ進む
+function nightEnd(){
+  S.phase = 'end'; mode('none'); stopTimer();
+  const n = S.night, logs = S.log.filter(l => l.night === n), right = logs.filter(l => l.accept === l.good).length;
+  showEnd(`${KANJI[n]}日目　終了`, '朝が来た', `佐藤さんにレジを任せて、店を出た。\n${S.shadow === 3 ? '足元の影は、ちゃんとある。' : '足元の影が、少しだけ薄い。'}\n\n今夜もまた、夜勤がある。`, false,
+    `<div>見抜いた判断 ${right} / ${logs.length}　・　あなたの影 ${S.shadow} / 3　・　苦情 ${S.comp} 件</div>` + missHTML(logs, false), false);
+  $('bNextNight').textContent = `${KANJI[n + 1]}日目の夜へ`;
 }
 
 function render(now){
@@ -1466,19 +1773,22 @@ function render(now){
     drawDoor(ctx, S.door);
     if (S.peek) drawPeek(ctx, now);
     drawLights(ctx);
+    if (S.anom) drawAnom(ctx, S.anom.kind, now);
     if (aisleOn(now)) drawPerson(ctx, SHADOWMAN, 250, 345, .38, 1, now, false);
     drawOmens(ctx, now); drawCreatures(ctx, now, false);
+    if (S.partner){ const pp = partnerP(); drawPerson(ctx, S.partner, 620, lerp(335, 640, pp), lerp(.42, 1.35, pp), 1, now, S.anim && S.anim.kind === 'walkin'); }
     const c = S.cur;
     if (c && S.pose.a > 0){
       const walking = !!(S.anim && S.anim.kind.startsWith('walk'));
       const p = ease(S.pose.p), sway = c.look.sway ? Math.sin(now / 520) * 9 : 0, bob = walking ? Math.sin(now / 300) * 4 : 0;
       // 人でないものは、レジ前でじわじわ身を乗り出してくる
       const lean = !c.human && S.phase === 'counter' ? clamp((now - S.counterT0) / 160000, 0, .12) : 0;
-      drawPerson(ctx, c, 480 + sway * p, lerp(335, 640, p) + bob + lean * 500, lerp(.42, 1.35, p) * (1 + lean), S.pose.a, now, walking);
+      const ox = S.anim && S.anim.kind === 'walkup' ? 140 * (1 - (S.pose.p - .4) / .6) : 0; // 後ろの列から横へ出てくる
+      drawPerson(ctx, c, 480 + ox + sway * p, lerp(335, 640, p) + bob + lean * 500, lerp(.42, 1.35, p) * (1 + lean), S.pose.a, now, walking);
     }
     drawCounter(ctx, now);
     const dread = (3 - S.shadow) * .07;
-    ctx.fillStyle = `rgba(0,0,0,${(1 - S.light) * .62 + S.idx / NIGHT.length * .14})`; ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = `rgba(0,0,0,${(1 - S.light) * .62 + Math.max(0, S.idx) / NIGHT.length * .14})`; ctx.fillRect(0, 0, W, H);
     if (dread > 0){ ctx.fillStyle = `rgba(60,0,0,${dread})`; ctx.fillRect(0, 0, W, H); }
     drawMonitor(now);
     if (S.toast){
@@ -1487,7 +1797,7 @@ function render(now){
       else { ctx.globalAlpha = (1 - k) * (S.toast.faint ? .45 : 1); ctx.font = '20px "DotGothic16", monospace'; ctx.textAlign = 'center'; ctx.fillStyle = '#ecf7f0'; ctx.fillText(S.toast.text, S.toast.x, S.toast.y - k * 14); ctx.globalAlpha = 1; }
     }
   }
-  if (S.closeK > 0){ ctx.save(); ctx.globalAlpha = S.closeK; ({ face: drawFaceView, cam: drawCamView }[S.lastView] || drawFeet)(now); ctx.restore(); }
+  if (S.closeK > 0){ ctx.save(); ctx.globalAlpha = S.closeK; ({ face: drawFaceView, cam: drawCamView, id: drawIdView }[S.lastView] || drawFeet)(now); ctx.restore(); }
   if (S.dark && now < S.dark.t0 + S.dark.dur){ ctx.fillStyle = 'rgba(0,0,0,.96)'; ctx.fillRect(0, 0, W, H); }
   ctx.drawImage(VIG, 0, 0);
   ctx.globalAlpha = .05; ctx.drawImage(NOISE[Math.floor(now / 50) % 4], 0, 0, W, H); ctx.globalAlpha = 1;
@@ -1500,6 +1810,7 @@ function render(now){
 
 /* ---------- 進行 ---------- */
 const bAccept = $('bAccept'), bReject = $('bReject'), bNext = $('bNext'), bFace = $('bFace'), bFeet = $('bFeet'), bCam = $('bCam'), bManual = $('bManual'), bTalk = $('bTalk');
+const bId = $('bId'), bReport = $('bReport');
 let typeTimer = null, typeFull = '';
 function typeLine(s){
   clearInterval(typeTimer); typeFull = s; const el = $('line'); el.textContent = '';
@@ -1514,6 +1825,28 @@ function say(who, desc, line, items){
 function hud(){
   $('shadowPips').innerHTML = [0, 1, 2].map(i => `<span class="${i < S.shadow ? '' : 'off'}"></span>`).join('');
   $('compPips').innerHTML = [0, 1, 2].map(i => `<span class="${i < S.comp ? 'on' : ''}"></span>`).join('');
+  $('clock').previousElementSibling.textContent = `${KANJI[S.night]}日目 AM`;
+}
+// マニュアルを、今夜の分だけ書き直す。3時を過ぎると誰かが偽のルールを書き足す
+function renderRules(){
+  const f = S.forged && FORGED[S.night]; let n = 0, html = '';
+  RULES.forEach(([from, t], i) => {
+    if (from > S.night) return;
+    const struck = f && f.replaces === i + 1; n++;
+    html += `<li${struck ? ' class="struck"' : ''}><b>${n}.</b><span>${t}</span></li>`;
+    if (struck) html += `<li class="${f.cls}"><b></b><span>${f.text}</span></li>`;
+  });
+  if (f && !f.replaces) html += `<li class="${f.cls}"><b>${n + 1}.</b><span>${f.text}</span></li>`;
+  $('rules').innerHTML = html;
+  const fr = [...S.frags].sort();
+  $('frags').hidden = !fr.length;
+  $('frags').innerHTML = '<h4>マニュアルに挟んだ紙</h4>' + fr.map(i => `<p>${esc(FRAGS[i])}</p>`).join('');
+}
+// 前任者の日誌の切れ端を拾う
+function gainFrag(i){
+  if (S.frags.has(i)) return '';
+  S.frags.add(i); DEX.frags[i] = 1; dexSave(); renderRules(); bManual.classList.add('glow'); sPaper();
+  return '\n\n（紙の切れ端を拾って、マニュアルに挟んだ）';
 }
 function mode(m, ev){
   const dec = m === 'decide';
@@ -1525,6 +1858,8 @@ function mode(m, ev){
   }
   bFeet.disabled = S.phase !== 'counter';
   bTalk.disabled = S.phase !== 'counter' || S.talkN >= ASK.length;
+  bId.disabled = S.phase !== 'counter' || !(S.ev && S.ev.id);
+  bReport.disabled = !['counter', 'narr', 'result', 'phone', 'animal'].includes(S.phase);
   bFace.disabled = S.phase !== 'counter' && S.phase !== 'animal';
   bCam.disabled = ['title', 'end', 'cut'].includes(S.phase);
   bManual.disabled = S.phase === 'end' || S.phase === 'cut';
@@ -1535,6 +1870,7 @@ function setView(v){
   bFeet.classList.toggle('on', v === 'feet'); bFeet.firstChild.textContent = v === 'feet' ? '顔を上げる' : '身を乗り出す';
   bFace.classList.toggle('on', v === 'face'); bFace.firstChild.textContent = v === 'face' ? '離れる' : '顔を見る';
   bCam.classList.toggle('on', v === 'cam'); bCam.firstChild.textContent = v === 'cam' ? 'カメラを閉じる' : '防犯カメラ';
+  bId.classList.toggle('on', v === 'id'); bId.firstChild.textContent = v === 'id' ? '身分証を返す' : '身分証';
 }
 // 話しかける。二回目は同じことを聞き直して、答えが変わるかを見る
 function talkTo(){
@@ -1550,7 +1886,7 @@ function react(v){
   const ev = S.ev;
   if (S.phase !== 'counter' || !ev || S.reacted[v]) return;
   S.reacted[v] = true;
-  const caught = v === 'feet' ? !ev.shadow : v === 'cam' ? ev.cam !== true : !ev.human;
+  const caught = v === 'feet' ? !ev.shadow : v === 'cam' ? ev.cam !== true : v === 'id' ? !!(ev.id && ev.id.flaw) : !ev.human;
   const pick = a => a[Math.floor(Math.random() * a.length)];
   let line = ev.react && ev.react[v];
   if (!line && !ev.human && caught && Math.random() < (v === 'face' ? .4 : .6)) line = pick(REACT_GHOST[v]);
@@ -1569,23 +1905,46 @@ function stopTimer(){ S.timer = null; $('timer').style.transform = 'scaleX(0)'; 
 
 function startGame(){
   S.name = $('nameIn').value.trim() || 'ミナミ';
-  NIGHT = buildNight();
-  Object.assign(S, { idx:-1, shadow:3, comp:0, right:0, total:0, log:[], red:false, pendingEnd:null, cur:null, ev:null, scare:null, door:0, doorT:0, peek:null, cut:null, view:null, dark:null, aisle:null, flash:null, camGhost:0, omenNext:0, omenArmed:false, flashes:0, pet:null, petHiss:0, animalAt:false, ufo:null, crow:null, moths:null, rat:null });
-  $('redRule').hidden = true; bManual.classList.remove('glow');
-  hud(); audioInit(); next();
+  const sv = parseInt($('seedIn').value, 10);
+  S.seed = sv > 0 && sv < 100000 ? sv : 1 + Math.floor(Math.random() * 99999);
+  Object.assign(S, { shadow:3, comp:0, right:0, total:0, log:[], used:new Set(), frags:new Set(), hidden:false, falseRep:0, pet:null, endKind:null, lastAnom:null });
+  bManual.classList.remove('glow');
+  startNight(1);
   if (navigator.wakeLock) navigator.wakeLock.request('screen').catch(() => {}); // プレイ中は画面を消さない
 }
+// 前の夜の判断のうち、次の夜に返ってくるもの
+function carryFrom(n){
+  const logs = S.log.filter(l => l.night === n && l.ev);
+  const custs = logs.filter(l => l.ev.type === 'cust' && !l.ev.final && !l.ev.returning && !l.ev.predecessor);
+  return {
+    humans: custs.filter(l => l.good && !l.accept).map(l => l.ev).slice(-1),
+    ghosts: custs.filter(l => !l.good && l.accept && !l.ev.minor && !l.ev.nodex && !(l.ev.accept && !l.ev.age)).map(l => l.ev).slice(-1),
+    complaints: logs.filter(l => (l.good && !l.accept && l.ev.type !== 'animal') || (l.accept && l.ev.minor)).length,
+  };
+}
+// 夜をはじめる。二日目からは、影が一つ戻り、苦情が一つ減る
+function startNight(n){
+  let restored = false;
+  if (n > 1){ restored = S.shadow < 3; S.shadow = Math.min(3, S.shadow + 1); S.comp = Math.max(0, S.comp - 1); bManual.classList.add('glow'); }
+  const carry = n > 1 ? { ...carryFrom(n - 1), restored } : null;
+  S.night = n; NIGHT = buildNight(n, carry);
+  Object.assign(S, { idx:-1, red:false, forged:false, pendingEnd:null, cur:null, ev:null, partner:null, scare:null, door:0, doorT:0, peek:null, cut:null, view:null, dark:null, aisle:null, flash:null, camGhost:0, omenNext:0, omenArmed:false, flashes:0, petHiss:0, animalAt:false, ufo:null, crow:null, moths:null, rat:null, anom:null });
+  bReport.hidden = n < 2; renderRules(); hud(); audioInit(); next();
+}
 function next(){
-  stopTimer(); S.ringing = false; S.phoneDisplay = ''; S.cur = null; S.ev = null; S.anim = null; S.doorT = 0; S.animalAt = false;
+  stopTimer(); S.ringing = false; S.phoneDisplay = ''; S.cur = null; S.ev = null; S.anim = null; S.doorT = 0; S.animalAt = false; S.partner = null;
   S.talkN = 0; S.reacted = {}; S.lineSeq++;
+  if (S.pendingEnd === 'night'){ S.pendingEnd = null; return nightEnd(); }
   if (S.pendingEnd) return ending(S.pendingEnd);
   const ev = NIGHT[++S.idx];
   if (!ev) return ending(S.shadow === 3 && S.comp === 0 ? 'true' : 'survive');
   S.ev = ev; $('clock').textContent = ev.t;
   if (ev.type === 'narr'){
     S.phase = 'narr';
-    if (ev.red){ S.red = true; $('redRule').hidden = false; bManual.classList.add('glow'); sPaper(); }
-    say(ev.who, '', fmt(ev.text)); mode('next');
+    if (ev.red){ S.red = S.forged = true; renderRules(); bManual.classList.add('glow'); sPaper(); }
+    let text = fmt(ev.text);
+    if (ev.frag !== undefined){ text += '\n\n' + FRAGS[ev.frag]; gainFrag(ev.frag); }
+    say(ev.who, '', text); mode('next');
   } else if (ev.type === 'phone'){
     S.phase = 'phone'; S.ringing = true; S.nextRing = 0; S.phoneDisplay = ev.display;
     say('店の電話', '着信表示：' + ev.display, 'プルルルル……　プルルルル……'); mode('decide', ev);
@@ -1596,8 +1955,11 @@ function next(){
     say(ev.who, fmt(ev.desc), fmt(ev.line)); mode('decide', ev); startTimer(16000);
   } else {
     S.cur = ev; S.phase = 'enter'; say('', '', ''); mode('none');
-    if (ev.chime || ev.walk){ // walk: ドアは開いて歩いてくるが、チャイムは鳴らない
+    if (ev.waiting){ S.pose = { p:.4, a:1 }; S.anim = { t0: performance.now(), dur: 1400, kind: 'walkup', done: arrive }; } // 後ろで待っていた2人目が前に出る
+    else if (ev.chime || ev.walk){ // walk: ドアは開いて歩いてくるが、チャイムは鳴らない
       S.doorT = 1; if (ev.chime){ sChime(); toast('♪ ピンポーン'); }
+      S.partner = ev.partner || null; // 2人連れ：チャイムが2回鳴るかどうか
+      if (ev.partner && ev.partner.chime) setTimeout(() => { sChime(); toast('♪ ピンポーン'); }, 750);
       S.pose = { p:0, a:1 }; S.anim = { t0: performance.now(), dur: 2300, kind: 'walkin', done: arrive };
     }
     else { S.pose = { p:1, a:0 }; S.anim = { t0: performance.now(), dur: 2000, kind: 'fadein', done: arrive }; }
@@ -1611,14 +1973,45 @@ function arrive(){
   }
   if (S.ev.alien) sUFO();
   const ev = S.ev; say(ev.who, fmt(ev.desc), fmt(ev.line), ev.items);
-  mode('decide', ev); startTimer(ev.final ? 24000 : 20000);
+  mode('decide', ev); startTimer(ev.final ? 24000 : ev.age ? 26000 : 20000);
+}
+// 二日目から、ときどき店の中が変わる。報告しないまま4組やり過ごすと、それが近づいてくる
+function anomTick(){
+  if (S.night < 2) return '';
+  if (S.anom && S.idx - S.anom.at >= 4){
+    const k = S.anom.kind; S.anom = null; S.shadow--; S.total++;
+    S.log.push({ anom:k, good:true, accept:false, night:S.night });
+    if (!S.scare){ S.scare = { t0: performance.now(), dur: RM ? 600 : 1100, kind:'face', ev: SHADOWMAN }; sScare(); }
+    return `\n\n……ずっと気づかないふりをしていた「${ANOM_NAME[k]}」が、すぐ隣に立っていた。`;
+  }
+  if (!S.anom && S.idx > 2 && Math.random() < .22){
+    const ks = Object.keys(ANOM_NAME).filter(k => k !== S.lastAnom), k = ks[Math.floor(Math.random() * ks.length)];
+    S.anom = { kind:k, at:S.idx }; S.lastAnom = k;
+  }
+  return '';
+}
+function report(){
+  if (bReport.disabled || bReport.hidden) return;
+  sClick();
+  if (S.anom){
+    const k = S.anom.kind; S.anom = null; S.right++; S.total++;
+    S.log.push({ anom:k, good:true, accept:true, night:S.night });
+    toast('本部に報告した。……元に戻っている。', 480, 200);
+    if (gainFrag(2)) setTimeout(() => toast('（棚の下に、紙の切れ端が落ちていた）', 480, 230), 1900);
+  } else {
+    S.falseRep++;
+    if (S.falseRep % 2 === 0){ S.comp++; hud(); toast('本部「見間違いの報告が続いています」', 480, 200); if (S.comp >= 3 && !S.pendingEnd) S.pendingEnd = 'fired'; }
+    else toast('……見間違いだったらしい。', 480, 200);
+  }
 }
 function decide(accept, timeout){
   if (!['counter', 'phone', 'animal'].includes(S.phase)) return;
-  const ev = S.ev, good = ev.type === 'phone' ? ev.caller === 'honbu' : ev.type === 'animal' ? !ev.fake : ev.human;
+  const ev = S.ev, good = ev.type === 'phone' ? ev.caller === 'honbu' : ev.type === 'animal' ? !ev.fake : ev.predecessor ? accept : ev.human && !ev.minor;
   stopTimer(); S.ringing = false; S.total++; S.lineSeq++;
-  S.log.push({ ev, good, accept, timeout });
+  S.log.push({ ev, good, accept, timeout, night: S.night });
+  dexMark(ev, accept === good);
   if (accept === good) S.right++;
+  else if (accept && ev.minor) S.comp++; // 未成年に売ると、本部から苦情
   else if (accept){
     S.shadow--;
     const kind = ev.type === 'phone' ? 'voice' : ev.type === 'animal' ? 'animal' : ev.scare || 'face';
@@ -1629,17 +2022,21 @@ function decide(accept, timeout){
   }
   else if (ev.type !== 'animal') S.comp++; // 本物の動物を追い返しても苦情は来ない
   let text = fmt(accept ? ev.aText : ev.rText);
+  if (ev.type === 'phone' && ev.caller === 'unknown' && !accept && S.night === 2 && !S.frags.has(3)) text = MACHINE + gainFrag(3); // 留守番電話に、前任者の声
+  if (ev.trap && ev.type === 'cust' && !accept) text += gainFrag(1);
+  if (ev.predecessor && accept) S.hidden = true;
   if (timeout) text = '（迷っているうちに、時間が過ぎた）\n' + text;
+  text += anomTick();
   S.phase = 'result';
   if (ev.type === 'phone') S.phoneDisplay = '';
   else if (ev.type === 'animal'){ if (accept){ S.animalAt = false; if (good){ S.pet = ev.animal; sChime(); } } }
-  else if (good){ S.doorT = 1; setTimeout(sChime, 900); S.anim = { t0: performance.now(), dur: 2200, kind: 'walkout', done(){ S.doorT = 0; } }; }
+  else if (good || ev.human){ S.doorT = 1; setTimeout(sChime, 900); S.anim = { t0: performance.now(), dur: 2200, kind: 'walkout', done(){ S.doorT = 0; } }; }
   else S.anim = { t0: performance.now(), dur: 1600, kind: 'fadeout', done(){} };
   say(ev.type === 'phone' ? '店の電話' : ev.who, '', text); $('items').textContent = '';
   if (S.shadow <= 0) S.pendingEnd = 'erosion';
   else if (S.comp >= 3) S.pendingEnd = 'fired';
   else if (ev.final === 'fake' && accept) S.pendingEnd = 'swap';
-  else if (ev.final === 'real') S.pendingEnd = S.shadow === 3 && S.comp === 0 ? 'true' : 'survive';
+  else if (ev.final === 'real') S.pendingEnd = S.night < 3 ? 'night' : S.hidden ? 'hidden' : S.shadow === 3 && S.comp === 0 ? 'true' : 'survive';
   hud(); mode('next'); bNext.focus({ preventScroll: true });
 }
 function ending(k){ // エンディング映像を流し、終わったら endCut() が結果画面を出す
@@ -1657,6 +2054,7 @@ function update(now){
     const k = clamp((now - S.anim.t0) / S.anim.dur, 0, 1), kind = S.anim.kind;
     if (kind === 'walkin') S.pose.p = k;
     else if (kind === 'walkout') S.pose.p = 1 - k;
+    else if (kind === 'walkup') S.pose.p = .4 + .6 * k;
     else if (kind === 'fadein') S.pose.a = k;
     else if (kind === 'fadeout') S.pose.a = 1 - k;
     if (k >= 1){ const d = S.anim.done; S.anim = null; d(); }
@@ -1707,14 +2105,57 @@ bNext.onclick = next;
 bFeet.onclick = () => { if (S.phase === 'counter'){ setView(S.view === 'feet' ? null : 'feet'); sClick(); if (S.view) react('feet'); } };
 bFace.onclick = () => { if (!bFace.disabled){ setView(S.view === 'face' ? null : 'face'); sClick(); if (S.view) react('face'); } };
 bCam.onclick = () => { if (!bCam.disabled){ setView(S.view === 'cam' ? null : 'cam'); sClick(); if (S.view) react('cam'); } };
+bId.onclick = () => { if (!bId.disabled){ setView(S.view === 'id' ? null : 'id'); sClick(); if (S.view) react('id'); } };
 bTalk.onclick = talkTo;
+bReport.onclick = report;
 cv.addEventListener('click', () => { if (S.cut && performance.now() - S.cut.t0 > 500) endCut(); });
-$('bRetry').onclick = () => { $('endOv').hidden = true; S.phase = 'title'; mode('none'); $('clock').textContent = '00:00'; say('', '', ''); $('titleOv').hidden = false; };
+const toTitle = seed => {
+  $('endOv').hidden = true; S.phase = 'title'; S.night = 1; S.forged = false; S.frags = new Set(); S.anom = null; S.partner = null;
+  $('seedIn').value = seed || ''; bReport.hidden = true; renderRules(); hud(); mode('none');
+  $('clock').textContent = '00:00'; say('', '', ''); $('titleOv').hidden = false;
+};
+$('bRetry').onclick = () => toTitle('');
+$('bSame').onclick = () => toTitle(S.seed);
+$('bNextNight').onclick = () => { $('endOv').hidden = true; startNight(S.night + 1); };
+// 結果をシェア。同じ番号のURLを付ける
+$('bShare').onclick = () => {
+  const url = location.href.split(/[?#]/)[0] + '?n=' + S.seed, e = ENDINGS[S.endKind];
+  const text = `深夜三時のレジ　夜の番号 #${S.seed}\n${e.kind}「${e.title}」　${KANJI[S.night]}日目まで／見抜いた判断 ${S.right}/${S.total}`;
+  if (navigator.share) navigator.share({ title: '深夜三時のレジ', text, url }).catch(() => {});
+  else if (navigator.clipboard) navigator.clipboard.writeText(text + '\n' + url).then(() => { $('bShare').textContent = 'コピーしました'; }, () => {});
+};
+// 客の図鑑
+function dexCatalog(){
+  const H = '人間', G = '人間ではない';
+  return [
+    ['人間', POOL.human, H], ['幽霊に見える人間', POOL.seemGhost, H], ['未成年', POOL.minor, '未成年'],
+    ['2人連れ', POOL.pair.flatMap(q => [q.a, q.b]), e => e.human ? H : G],
+    ['ルールを破るもの', [...POOL.noChime, ...POOL.noShadow, ...POOL.trap, ...POOL.noCam, ...POOL.nameCall], G],
+    ['人間に見える、人ではないもの', POOL.stealth, G], ['身分証がおかしいもの', POOL.idFake, G], ['宇宙人', POOL.alien, G],
+    ['偽物', [...POOL.fake, MANAGER, FAKE_SATO], G], ['動物', POOL.animal, e => e.fake ? '偽物' : '本物'],
+    ['朝の人', [REAL_SATO, PREDECESSOR], e => e.human ? H : '前の担当'],
+  ];
+}
+function openDex(){
+  let total = 0, solved = 0;
+  $('dexList').innerHTML = dexCatalog().map(([title, list, tag]) => `<h3>${title}</h3><div class="dex-grid">` + list.map(e => {
+    const k = dexKey(e), t = typeof tag === 'function' ? tag(e) : tag; total++;
+    if (DEX.solved[k]){ solved++; return `<div class="dex-item ok"><b>${esc(e.who)}</b><span class="${t === '人間' || t === '本物' ? '' : 'bad'}">${t}</span><small>${esc(fmt(e.desc))}</small></div>`; }
+    if (DEX.seen[k]) return `<div class="dex-item seen"><b>${esc(e.who)}</b><span>正体：？</span></div>`;
+    return '<div class="dex-item"><b>？？？</b></div>';
+  }).join('') + '</div>').join('');
+  $('dexSum').innerHTML = [`見抜いた客 ${solved} / ${total}`, `エンディング ${Object.keys(DEX.ends).length} / ${Object.keys(ENDINGS).length}`, `前任者の切れ端 ${Object.keys(DEX.frags).length} / ${FRAGS.length}`]
+    .map(s => `<span>${s}</span>`).join('　・　');
+  $('dexOv').hidden = false; $('bDexClose').focus({ preventScroll: true });
+}
+const closeDex = () => { $('dexOv').hidden = true; };
+$('bDex').onclick = openDex; $('bDex2').onclick = openDex; $('bDexClose').onclick = closeDex;
 $('mute').onclick = () => { A.muted = !A.muted; if (A.m) A.m.gain.value = A.muted ? 0 : .9; $('mute').textContent = A.muted ? '音 OFF' : '音 ON'; };
 addEventListener('keydown', e => {
   if (e.target.tagName === 'INPUT'){ if (e.key === 'Enter') $('bStart').click(); return; }
   const k = e.key.toLowerCase();
   if (S.cut){ if (k === 'enter' || k === ' ' || k === 'escape'){ e.preventDefault(); endCut(); } return; }
+  if (!$('dexOv').hidden){ if (k === 'escape') closeDex(); return; }
   if (!manualOv.hidden){ if (k === 'escape' || k === 'm') closeManual(); return; }
   if (!$('endOv').hidden || !$('titleOv').hidden) return;
   if (k === '1' && !bAccept.hidden) bAccept.click();
@@ -1723,6 +2164,8 @@ addEventListener('keydown', e => {
   else if (k === 'v' && !bFace.disabled) bFace.click();
   else if (k === 'c' && !bCam.disabled) bCam.click();
   else if (k === 't' && !bTalk.disabled) bTalk.click();
+  else if (k === 'i' && !bId.disabled) bId.click();
+  else if (k === 'r' && !bReport.disabled && !bReport.hidden) bReport.click();
   else if (k === 'm' && !bManual.disabled) bManual.click();
   else if ((k === 'enter' || k === ' ') && !bNext.hidden && document.activeElement !== bNext){ e.preventDefault(); bNext.click(); }
 });
@@ -1731,5 +2174,6 @@ if (fsBtn) fsBtn.onclick = () => {
   if (document.fullscreenElement) document.exitFullscreen();
   else if (document.documentElement.requestFullscreen) document.documentElement.requestFullscreen().catch(() => {});
 };
-hud(); mode('none');
+if (URLSEED) $('seedIn').value = URLSEED;
+renderRules(); hud(); mode('none');
 })();

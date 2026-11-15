@@ -2,7 +2,7 @@
 html,body{overscroll-behavior:none}
 body.sp{-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none;touch-action:manipulation;-webkit-touch-callout:none}
 body.sp input{-webkit-user-select:text;user-select:text}
-body.sp .app{padding-block:8px calc(150px + env(safe-area-inset-bottom,0px));gap:8px}
+body.sp .app{padding-block:8px calc(196px + env(safe-area-inset-bottom,0px));gap:8px}
 body.sp .hud{gap:6px 12px}
 body.sp .clock{font-size:22px}
 body.sp .meters{gap:10px;font-size:12px}
@@ -14,9 +14,9 @@ body.sp kbd{display:none}
 body.sp .actions{position:fixed;left:0;right:0;bottom:0;z-index:10;display:grid;grid-template-columns:1fr;gap:8px;background:var(--bg);border-top:1px solid var(--line);
   padding:10px max(12px,env(safe-area-inset-right,0px)) calc(10px + env(safe-area-inset-bottom,0px)) max(12px,env(safe-area-inset-left,0px))}
 body.sp .actions .grp{display:grid;gap:6px}
-body.sp .actions .grp:first-child{grid-template-columns:repeat(5,1fr)}
+body.sp .actions .grp:first-child{grid-template-columns:repeat(4,1fr)}
 body.sp .actions .grp:last-child{grid-template-columns:1fr 1fr;min-height:52px}
-body.sp .actions .grp:first-child button{font-size:11px;letter-spacing:-.04em;padding:10px 0;white-space:nowrap;min-width:0}
+body.sp .actions .grp:first-child button{font-size:12px;letter-spacing:-.03em;padding:9px 0;white-space:nowrap;min-width:0}
 body.sp .actions .grp:last-child button{font-size:16px;padding:14px 8px}
 body.sp #bNext{grid-column:1 / -1}
 body.sp button:active:not(:disabled){background:var(--line)}
@@ -24,3 +24,4 @@ body.sp button.primary:active:not(:disabled){background:var(--muted)}
 
 body.sp .overlay{padding-bottom:max(24px,env(safe-area-inset-bottom,0px))}
 body.sp .note{font-size:16px}
+body.sp .card .row button{flex:1 1 auto}

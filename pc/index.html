@@ -37,7 +37,9 @@
       <button id="bFace" type="button">顔を見る<kbd>V</kbd></button>
       <button id="bFeet" type="button">身を乗り出す<kbd>F</kbd></button>
       <button id="bCam" type="button">防犯カメラ<kbd>C</kbd></button>
+      <button id="bId" type="button">身分証<kbd>I</kbd></button>
       <button id="bTalk" type="button">話しかける<kbd>T</kbd></button>
+      <button id="bReport" type="button" hidden>異変を報告<kbd>R</kbd></button>
       <button id="bManual" type="button">マニュアル<kbd>M</kbd></button>
     </div>
     <div class="grp">
@@ -54,12 +56,17 @@
     <h1>深夜三時のレジ</h1>
     <p>今夜からひとりで夜勤に入る。前の担当者から引き継いだのは、店の鍵と手書きのマニュアル一冊だけ。</p>
     <p>来る客を見て、接客するか、目を伏せてやり過ごすかを決める。人間を無視すれば苦情が入る。人間ではないものに接客すれば、あなたの影が薄くなる。</p>
+    <p>夜勤は三日間。前の夜の判断は、次の夜に返ってくる。</p>
     <div class="field">
       <label for="nameIn">あなたの名前（名札には書かれません）</label>
       <input id="nameIn" maxlength="8" placeholder="例：ミナミ" autocomplete="off">
     </div>
-    <div class="row"><button id="bStart" class="primary" type="button">マニュアルを読む</button></div>
-    <p class="muted">音が出ます。ヘッドホン推奨。マニュアルを開いている間も、客は待ってくれません。来る客は、毎晩ちがいます。<br>キー操作：1 接客 ／ 2 目を伏せる ／ V 顔 ／ F 足元 ／ C カメラ ／ T 話しかける ／ M マニュアル</p>
+    <div class="field">
+      <label for="seedIn">夜の番号（空欄なら毎回ちがう夜。友達と同じ番号を入れると、同じ客が来る）</label>
+      <input id="seedIn" inputmode="numeric" maxlength="5" placeholder="例：12345" autocomplete="off">
+    </div>
+    <div class="row"><button id="bStart" class="primary" type="button">マニュアルを読む</button><button id="bDex" type="button">客の図鑑</button></div>
+    <p class="muted">音が出ます。ヘッドホン推奨。マニュアルを開いている間も、客は待ってくれません。来る客は、毎晩ちがいます。<br>キー操作：1 接客 ／ 2 目を伏せる ／ V 顔 ／ F 足元 ／ C カメラ ／ I 身分証 ／ T 話しかける ／ R 異変を報告 ／ M マニュアル</p>
   </div>
 </div>
 
@@ -67,21 +74,13 @@
   <div class="note" role="dialog" aria-label="夜勤マニュアル">
     <h3>夜勤のひとへ</h3>
     <p>このノートは全部、黒のボールペンで書いた。</p>
-    <ol>
-      <li><b>1.</b><span>入店チャイムが鳴らなかった客には、接客しないこと。目を伏せて、いなくなるのを待つ。</span></li>
-      <li><b>2.</b><span>足元に影がない客には、接客しないこと。レジからは見えないので、身を乗り出して確かめる。</span></li>
-      <li><b>3.</b><span>防犯カメラのモニターに映らない客には、接客しないこと。映像が乱れて姿がわからない客も同じ。</span></li>
-      <li><b>4.</b><span>名札には「研修中」としか書いていない。客があなたの名前を呼んだら、接客しないこと。</span></li>
-      <li><b>5.</b><span>店の電話が鳴ったら表示を見る。本部からなら出る。非通知なら絶対に出ない。</span></li>
-      <li><b>6.</b><span>店長は今夜来ない。</span></li>
-      <li><b>7.</b><span>朝6時の交代は佐藤さん。佐藤さんは左手に包帯を巻いている。</span></li>
-      <li class="red" id="redRule" hidden><b>8.</b><span>午前3時を過ぎたら、影のない客にも接客してよい。</span></li>
-    </ol>
+    <ol id="rules"></ol>
     <p>変わった人と、人じゃないものは、違う。見た目で決めないこと。普通に見えるものほど、よく見ること。</p>
     <p>チャイムは耳で確かめること。ドアが開いても、鳴らないことがある。</p>
     <p>迷ったら話しかけてみる。同じことを二回聞いて、答えが変わったら気をつけて。酔っぱらいと寝ぼけた人は別。</p>
     <p>動物にも、影はある。</p>
     <p class="sign">— 前任より</p>
+    <div class="frags" id="frags" hidden></div>
     <div class="close"><button id="bManClose" type="button">閉じる</button></div>
   </div>
 </div>
@@ -92,7 +91,16 @@
     <h2 id="endTitle"></h2>
     <p class="end-text" id="endText"></p>
     <div class="stats" id="endStats"></div>
-    <div class="row"><button id="bRetry" class="primary" type="button">もう一度、夜勤に入る</button></div>
+    <div class="row"><button id="bNextNight" class="primary" type="button" hidden>次の夜へ</button><button id="bRetry" class="primary" type="button">もう一度、夜勤に入る</button><button id="bSame" type="button">同じ番号でもう一度</button><button id="bShare" type="button">結果をシェア</button><button id="bDex2" type="button">図鑑</button></div>
+  </div>
+</div>
+<div class="overlay" id="dexOv" hidden>
+  <div class="card dex">
+    <div class="kicker">この端末で見抜いた客の記録</div>
+    <h2>客の図鑑</h2>
+    <p class="muted" id="dexSum"></p>
+    <div id="dexList"></div>
+    <div class="row"><button id="bDexClose" class="primary" type="button">閉じる</button></div>
   </div>
 </div>
 <script src="../game.js"></script>
